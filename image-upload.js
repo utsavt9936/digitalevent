@@ -4,8 +4,8 @@ const multerS3 = require('multer-s3');
 //const config = require('../config');
 
 aws.config.update({
-  secretAccessKey: 'K64hQnCGLTXXyZ3w3y8kBblYlzPK0w0G0MvsyKpT',
-  accessKeyId: 'AKIAJA2H5WZW75SB62OQ',
+  secretAccessKey: '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',
+  accessKeyId: 'AKIAJJ2NG63R4WSES3FQ',
   region: 'us-east-2'
 });
 
@@ -23,13 +23,16 @@ const upload = multer({
   fileFilter,
   storage: multerS3({
     acl: 'public-read',
+    
     s3,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    //contentType:'image/jpeg',
     bucket: 'elasticbeanstalk-us-east-2-878453456805',
     metadata: function (req, file, cb) {
       cb(null, {fieldName: 'TESTING_METADATA'});
     },
     key: function (req, file, cb) {
-      cb(null, Date.now().toString())
+      cb(null, Date.now().toString()+".jpg")
     }
   })
 });

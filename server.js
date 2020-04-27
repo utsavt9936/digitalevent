@@ -7,8 +7,11 @@ const Password=require('./functions/password')
 const register=require('./functions/register')
 const auth = require('basic-auth');
 const jwt=require('jsonwebtoken')
+//const port1=process.env.PORT ||3000
 const port=process.env.PORT ||3000
-
+const https =require('https')
+const fs=require('fs')
+const http=require('http')
 const connectionString='postgres://cudptzoirbatka:23aec0b2b0e941d5a71926bde8bb14d26b216bd6e3ddfc891fac1162975e54c5@ec2-3-229-210-93.compute-1.amazonaws.com:5432/d26ph197quq31v'
 
 
@@ -40,9 +43,19 @@ const pool= new pg.Pool(config)
 const app=express()
 app.use(bodyParser.json())
 
-app.listen(port,()=>{
-    console.log('connected')
-})
+
+/*https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+  }, app)*/
+  app.listen(port, function () {
+    console.log(' Go to https://localhost:3000/')
+  })
+/*http.createServer(app).listen(port1,function(){
+    console.log('listening http 3000')
+});*/
+
+
 
 
 global.myid
@@ -62,7 +75,7 @@ app.post('/:id/create_event',authorizeParams,(req,res)=>{
     // const obj=JSON.parse(req.body)
       console.log(req.body)
      // res.send('done')
-      const results= globalThis.client.query('INSERT INTO event (organiser_type,event_type,category,organiser_name,description,privacy,image,regfee,tags,event_name) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',[req.body.org_type,req.body.event_type,req.body.category,req.body.name,req.body.description,req.body.privacy,req.body.image,req.body.regfee,req.body.tags,req.body.event_name],(err,results)=>{
+      const results= globalThis.client.query('INSERT INTO event (organiser_type,event_type,category,organiser_name,description,privacy,image,regfee,tags,event_name,date,time) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',[req.body.org_type,req.body.event_type,req.body.category,req.body.name,req.body.description,req.body.privacy,req.body.image,req.body.regfee,req.body.tags,req.body.event_name,req.body.date,req.body.time],(err,results)=>{
       // console.log(results)   
        res.send('done')
          })
@@ -195,7 +208,7 @@ else if(req.query.privacy)
 
 })
 
-app.post('/:id/image-upload',authorizeParams, function(req, res) {
+app.post('/:id/image-upload', function(req, res) {
     singleUpload(req, res, function(err) {
       if (err) {
         res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}]})
@@ -358,3 +371,10 @@ app.post('/authenticate' , async(req,res) => {
     }
     
 });
+
+app.post('/delete',(req,res)=>{
+
+    globalThis.client.query('DELETE FROM users where email=$1',[req.query.email])
+    res.send('done')
+
+})

@@ -176,17 +176,14 @@ pool.connect((err,client,done)=>{
 
         console.log(email,token)
 
-        client.query('select * from users where email=$1',[email],(err,results)=>{
-            //console.table(results.rows)   
-           globalThis.otp=(results.rows[0]).otp
-              })
+       let result= await client.query('select * from users where email=$1',[email])
         
-        if(globalThis.otp === token) 
+        if((result.rows[0]).otp === token) 
         {
             
     
             
-            globalThis.otp = null;
+            //globalThis.otp = null;
             
     
             let response = {
