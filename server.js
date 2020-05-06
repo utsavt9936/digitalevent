@@ -11,7 +11,9 @@ const jwt=require('jsonwebtoken')
 const port=process.env.PORT ||3000
 const https =require('https')
 const fs=require('fs')
-const http=require('http')
+//const http=require('http')
+
+const lvs=require('./liveStream')
 const connectionString='postgres://cudptzoirbatka:23aec0b2b0e941d5a71926bde8bb14d26b216bd6e3ddfc891fac1162975e54c5@ec2-3-229-210-93.compute-1.amazonaws.com:5432/d26ph197quq31v'
 
 
@@ -30,14 +32,14 @@ const authorizeParams = require('./functions/checkToken');
 
 
 var config = {
-    host: 'uvgrid-test.cak8aytcldkp.us-east-2.rds.amazonaws.com',
+    host: 'uvgrid-deploy.cak8aytcldkp.us-east-2.rds.amazonaws.com',
     port: 5432,
     user: 'postgres',
     password: 'hailhydra',
     database: "UVGridDB",
-    max: 10, 
-    idleTimeoutMillis: 30000 
-  }
+    max: 10,
+    idleTimeoutMillis: 30000
+}
 const pool= new pg.Pool(config)
 
 const app=express()
@@ -48,9 +50,7 @@ app.use(bodyParser.json())
     key: fs.readFileSync('server.key'),
     cert: fs.readFileSync('server.cert')
   }, app)*/
-  app.listen(port, function () {
-    console.log(' Go to https://localhost:3000/')
-  })
+ 
 /*http.createServer(app).listen(port1,function(){
     console.log('listening http 3000')
 });*/
@@ -62,7 +62,7 @@ global.myid
 
 pool.connect((err,client,done)=>{
 
-   // console.log('clt',client)
+   console.log('clt',client)
 
 
    globalThis.client=client
@@ -373,8 +373,71 @@ app.post('/authenticate' , async(req,res) => {
 });
 
 app.post('/delete',(req,res)=>{
+    
 
     globalThis.client.query('DELETE FROM users where email=$1',[req.query.email])
     res.send('done')
 
 })
+
+app.get('/createSession',async (req,res)=>{
+
+    let response=await lvs.generateSession(req,res)
+
+    //console.log(response)
+
+    //res.send(response.sessionId)
+
+})
+
+app.get('/pubtoken',async (req,res)=>{
+
+    lvs.pubtoken(req,res)
+
+})
+app.get('/subtoken',async (req,res)=>{
+
+    lvs.subtoken(req,res)
+
+})
+app.get('/startrec',async (req,res)=>{
+
+    lvs.startRecord(req,res)
+
+})
+app.get('/stoprec',async (req,res)=>{
+
+    lvs.stopRecord(req,res)
+
+})
+app.get('/getrec',async (req,res)=>{
+
+    lvs.getRecord(req,res)
+
+})
+
+exports.app=()=>{
+    return app
+}
+
+const http=require('http').createServer(app)
+const io=require('socket.io')(http)
+
+console.log(io)
+io.on('connection',(socket)=>{
+
+    // console.log(' client connected ')
+    console.log('new user',socket.id)
+     socket.on('comment',(mess)=>{
+ 
+        // console.log(mess)
+         socket.emit('comment',mess)
+         console.log(mess)
+     
+     })
+ 
+ })
+
+ http.listen(port,'192.168.43.5', function () {
+    console.log(' Go to https://localhost:3000/')
+  })

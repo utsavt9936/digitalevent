@@ -1,0 +1,2 @@
+
+const sapp=require('./server')
