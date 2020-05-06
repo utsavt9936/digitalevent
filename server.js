@@ -431,7 +431,7 @@ io.on('connection',(socket)=>{
      socket.on('comment',(mess)=>{
  
         // console.log(mess)
-         socket.emit('comment',mess)
+         io.emit('comment',mess)
          console.log(mess)
      
      })
