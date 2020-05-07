@@ -435,6 +435,13 @@ io.on('connection',(socket)=>{
          console.log(mess)
      
      })
+     socket.on('question',(mess)=>{
+ 
+        // console.log(mess)
+         io.emit('question',mess)
+         console.log(mess)
+     
+     })
  
  })
 
