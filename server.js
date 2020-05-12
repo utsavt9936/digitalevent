@@ -11,7 +11,10 @@ const jwt=require('jsonwebtoken')
 const port=process.env.PORT ||8080
 const https =require('https')
 const fs=require('fs')
+const configt=require('./config/config.json')
 //const http=require('http')
+
+var hlsconfig={hls:{}}
 
 const lvs=require('./liveStream')
 const connectionString='postgres://cudptzoirbatka:23aec0b2b0e941d5a71926bde8bb14d26b216bd6e3ddfc891fac1162975e54c5@ec2-3-229-210-93.compute-1.amazonaws.com:5432/d26ph197quq31v'
@@ -403,7 +406,11 @@ app.get('/pubtoken',async (req,res)=>{
 })
 app.get('/startbroadcast',async (req,res)=>{
 
-   let t= await lvs.startBroadcast(req,res)
+   let tempv= await lvs.startBroadcast(req,res,hlsconfig)
+  // app.set('hls',)
+
+ console.log(lvs.brdc)
+ 
      
 
 })
@@ -462,11 +469,20 @@ io.on('connection',(socket)=>{
   })
 
   app.get('/stopbroadcast',(req,res)=>{
-     opent.getBroadcast(req.query.broadcastId,function (err,bds){
-         
+      console.log(configt.broadcast)
+     opent.stopBroadcast(configt.broadcast.id,function (err,bds){
 
+        
+        configt.broadcast={}
         console.log(bds)
             res.send(bds)
      })
      
   })
+
+ 
+  app.get('/gethls',(req,res)=>{
+    
+   res.send(configt.broadcast.broadcastUrls.hls)
+  // res.send(process.env.BROADCAST.broadcastUrls.hls)
+})

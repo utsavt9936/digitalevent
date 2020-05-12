@@ -1,5 +1,5 @@
 const OpenTok=require('opentok')
-
+const config=require('./config/config.json')
 var opentok=new OpenTok('46671022','d3ffd993e72d566ad37b5b7bf7aa4d98e6375ea0')
 exports.generateSession=async(req,res)=>{
 
@@ -110,7 +110,7 @@ exports.getRecord=async(req,res)=>{
     
 }
 
-exports.startBroadcast=async(req,res)=>{
+exports.startBroadcast=async(req,res,hlsconfig)=>{
  // console.log(app)
   console.log('inside')
   var broadcastOptions = {
@@ -132,15 +132,24 @@ exports.startBroadcast=async(req,res)=>{
   };
   //console.log(opentok)
   console.log('inside',2)
+  //console.log('ctest',config.password)
   var sessionId=req.query.sessionId
   opentok.startBroadcast(sessionId,broadcastOptions, function(error, broadcast) {
   
+    
     if (error) {
-      res.send(error)
+      res.send(error.message)
       return console.log(error);
     }
+    //req.chkrl="hello"
+    config.broadcast=broadcast
+    hlsconfig.hls=broadcast
+
+    //process.env.BROADCAST=broadcast
     res.send(broadcast)
-    return console.log('Broadcast started: ', broadcast.id);
+    exports.brdc=broadcast
+    req.brd=broadcast
+    return broadcast
   });
 
 
