@@ -28,6 +28,7 @@
     "multer-s3": "^2.9.0",
     "node": "^12.13.1",
     "node-gyp": "^5.0.7",
+    "node-media-server": "^2.1.8",
     "nodemailer": "^6.4.2",
     "nodemon": "^2.0.2",
     "opentok": "^2.10.0",

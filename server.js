@@ -8,14 +8,16 @@ const register=require('./functions/register')
 const auth = require('basic-auth');
 const jwt=require('jsonwebtoken')
 //const port1=process.env.PORT ||3000
-const port=process.env.PORT ||3000
+const port=process.env.PORT ||8080
 const https =require('https')
 const fs=require('fs')
 //const http=require('http')
 
 const lvs=require('./liveStream')
 const connectionString='postgres://cudptzoirbatka:23aec0b2b0e941d5a71926bde8bb14d26b216bd6e3ddfc891fac1162975e54c5@ec2-3-229-210-93.compute-1.amazonaws.com:5432/d26ph197quq31v'
+const OpenTok=require('opentok')
 
+var opent=new OpenTok('46671022','d3ffd993e72d566ad37b5b7bf7aa4d98e6375ea0')
 
 
 const upload = require('./image-upload');
@@ -384,6 +386,9 @@ app.get('/createSession',async (req,res)=>{
 
     let response=await lvs.generateSession(req,res)
 
+
+
+
     //console.log(response)
 
     //res.send(response.sessionId)
@@ -393,6 +398,13 @@ app.get('/createSession',async (req,res)=>{
 app.get('/pubtoken',async (req,res)=>{
 
     lvs.pubtoken(req,res)
+
+
+})
+app.get('/startbroadcast',async (req,res)=>{
+
+   let t= await lvs.startBroadcast(req,res)
+     
 
 })
 app.get('/subtoken',async (req,res)=>{
@@ -423,7 +435,7 @@ exports.app=()=>{
 const http=require('http').createServer(app)
 const io=require('socket.io')(http)
 
-console.log(io)
+//console.log(io)
 io.on('connection',(socket)=>{
 
     // console.log(' client connected ')
@@ -447,4 +459,14 @@ io.on('connection',(socket)=>{
 
  http.listen(port, function () {
     console.log(' Go to https://localhost:3000/')
+  })
+
+  app.get('/stopbroadcast',(req,res)=>{
+     opent.getBroadcast(req.query.broadcastId,function (err,bds){
+         
+
+        console.log(bds)
+            res.send(bds)
+     })
+     
   })
