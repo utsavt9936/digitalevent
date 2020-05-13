@@ -1,6 +1,6 @@
 const OpenTok=require('opentok')
 const config=require('./config/config.json')
-var opentok=new OpenTok('46671022','d3ffd993e72d566ad37b5b7bf7aa4d98e6375ea0')
+var opentok=new OpenTok('46734492','7060a2f3c61058f3a6893ef0456a75d74bdefe34')
 exports.generateSession=async(req,res)=>{
 
     console.log(opentok)

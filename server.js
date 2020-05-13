@@ -20,7 +20,7 @@ const lvs=require('./liveStream')
 const connectionString='postgres://cudptzoirbatka:23aec0b2b0e941d5a71926bde8bb14d26b216bd6e3ddfc891fac1162975e54c5@ec2-3-229-210-93.compute-1.amazonaws.com:5432/d26ph197quq31v'
 const OpenTok=require('opentok')
 
-var opent=new OpenTok('46671022','d3ffd993e72d566ad37b5b7bf7aa4d98e6375ea0')
+var opent=new OpenTok('46734492','7060a2f3c61058f3a6893ef0456a75d74bdefe34')
 
 
 const upload = require('./image-upload');
