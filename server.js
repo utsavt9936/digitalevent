@@ -8,7 +8,7 @@ const register=require('./functions/register')
 const auth = require('basic-auth');
 const jwt=require('jsonwebtoken')
 //const port1=process.env.PORT ||3000
-const port=process.env.PORT ||8080
+const port=process.env.PORT ||3000
 const https =require('https')
 const fs=require('fs')
 const configt=require('./config/config.json')
@@ -37,10 +37,10 @@ const authorizeParams = require('./functions/checkToken');
 
 
 var config = {
-    host: 'uvgrid-deploy.cak8aytcldkp.us-east-2.rds.amazonaws.com',
+    host: 'uvgriddb.cak8aytcldkp.us-east-2.rds.amazonaws.com',
     port: 5432,
     user: 'postgres',
-    password: 'hailhydra',
+    password: 'L3tsPar7y',
     database: "UVGridDB",
     max: 10,
     idleTimeoutMillis: 30000
@@ -462,6 +462,10 @@ io.on('connection',(socket)=>{
      
      })
  
+ })
+
+ app.get('/',(req,res)=>{
+     res.send("Working ")
  })
 
  http.listen(port, function () {
