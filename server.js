@@ -490,3 +490,97 @@ io.on('connection',(socket)=>{
    res.send(configt.broadcast.broadcastUrls.hls)
   // res.send(process.env.BROADCAST.broadcastUrls.hls)
 })
+
+
+
+//group---------------------------------------------------------------------
+//------------------------------------------------------------------------------
+app.post('/:id/create_group',authorizeParams,(req,res)=>{
+
+    //console.log('testing............')
+    
+
+    
+        const result=globalThis.client.query('INSERT INTO groups (group_name,description,icon_url,category,type) values($1,$2,$3,$4,$5)',[req.body.group_name,req.body.description,req.body.icon_url,req.body.category,req.body.type],(error,results)=>{
+        if(error)
+        {
+
+        } 
+        else
+        {
+            console.log(results)
+    res.send(results)
+        
+        }   
+        
+        })
+        
+        
+    
+})
+
+app.get('/:id/get_groups',authorizeParams,(req,res)=>{
+    if(req.query.category)
+    {
+        const results=globalThis.client.query('SELECT * FROM groups WHERE category=$1',[req.query.category],(error,result)=>{
+            if(error)
+            {
+                console.log(error)
+                res.send(error)
+            }
+            {
+                res.send(result.rows)
+        console.table(result.rows)
+            }
+        })
+      
+    }
+    else if(req.query.type)
+    {
+        const results=globalThis.client.query('SELECT * FROM groups WHERE type=$1',[req.query.type],(error,result)=>{
+            if(error)
+            {
+                console.log(error)
+                res.send(error)
+            }
+            {
+                res.send(result.rows)
+        console.table(result.rows)
+            }
+        })
+      
+
+    }
+    else if(req.query.group_name)
+    {
+        const results=globalThis.client.query('SELECT * FROM groups WHERE group_name=$1',[req.query.group_name],(error,result)=>{
+            if(error)
+            {
+                console.log(error)
+                res.send(error)
+            }
+            {
+                res.send(result.rows)
+        console.table(result.rows)
+            }
+        })
+        
+
+    }
+    else
+    {
+        const results=globalThis.client.query('SELECT * FROM groups ',(error,result)=>{
+            if(error)
+            {
+                console.log(error)
+                res.send(error)
+            }
+            {
+                res.send(result.rows)
+        console.table(result.rows)
+            }
+        })
+        
+
+    }
+})
