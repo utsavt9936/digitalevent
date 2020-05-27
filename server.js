@@ -281,6 +281,52 @@ console.log(result)
 })
 
 
+app.patch('/:id/edit_profile',authorizeParams,(req,res)=>{
+
+    if(req.body.name)
+    {
+        const results= globalThis.client.query('UPDATE users SET name = $1 where id=$2;',[req.body.name,req.params.id],(err,results)=>{
+            if(err)
+            {
+                console.log(err)
+                 return res.send(err)
+            }
+           })
+    }
+    if(req.body.profilepic)
+    {
+        const results= globalThis.client.query('UPDATE users SET profilepic = $1 where id=$2;',[req.body.profilepic,req.params.id],(err,results)=>{
+            if(err)
+            {
+                console.log(err)
+                 return res.send(err)
+            }
+           })
+    }
+
+    if(req.body.occupation)
+    {
+        const results= globalThis.client.query('UPDATE users SET occupation = $1 where id=$2;',[req.body.occupation,req.params.id],(err,results)=>{
+            if(err)
+            {
+                console.log(err)
+                 return res.send(err)
+            }
+           })
+    }
+    
+
+    res.send('updated')
+
+})
+
+
+
+
+
+//post---------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
 app.post('/:id/createpost',authorizeParams,async (req,res)=>{
 
 
