@@ -45,7 +45,7 @@ exports.createPost = async(req,client) => {
 exports.findPost = async(req,client) => {
     
 
-   let results= client.query('select * from posts where id=$1',[req.body.postid])
+   let results= client.query('select * from posts where id=$1',[req.query.postid])
 
        return results.rows;
 
@@ -55,7 +55,7 @@ exports.findPost = async(req,client) => {
 exports.getPosts = async(req,client) => {
     
     
-    let results=client.query('select * from posts where author=$1',[req.body.authorid])
+    let results=client.query('select * from posts where author=$1',[req.query.authorid])
 
        return results
 
