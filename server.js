@@ -327,10 +327,20 @@ app.patch('/:id/edit_profile',authorizeParams,(req,res)=>{
 //post---------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
 
-app.post('/:id/createpost',authorizeParams,async (req,res)=>{
+app.post('/:id/createpost',async (req,res)=>{
 
 
     let response = await posts.createPost(req,globalThis.client)
+
+   
+    res.send(response)
+
+})
+
+app.post('/:id/sharepost',authorizeParams,async (req,res)=>{
+
+
+    let response = await posts.sharePost(req,globalThis.client)
 
    
     res.send(response)

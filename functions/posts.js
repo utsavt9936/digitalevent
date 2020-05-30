@@ -4,13 +4,13 @@ const pg=require('pg')
 
 
 
-exports.createPost = async(req,client) => {
+exports.sharePost = async(req,client) => {
 
    
   
 
    try {
-    client.query('INSERT INTO posts (content, medias,author,createdat) values($1,$2,$3,$4) returning id',[req.body.content,req.body.medias,req.body.authorid,req.body.createdat],(err,results)=>{
+    client.query('INSERT INTO posts (parent_id,parent_author,content, medias,author,createdat) values($1,$2,$3,$4,$5,$6) returning id',[req.body.parent_id,req.body.parent_author,req.body.content,req.body.medias,req.body.authorid,req.body.createdat],(err,results)=>{
         // return results  
         
         console.log(results)
@@ -41,6 +41,53 @@ exports.createPost = async(req,client) => {
     
    // return response;
 }
+
+
+
+
+
+exports.createPost = async(req,client) => {
+
+   
+  
+
+    try {
+     client.query('INSERT INTO posts (content, media,author,createdat,privacy) values($1,$2,$3,$4,$5) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy],(err,results)=>{
+         // return results  
+         
+         console.log(results)
+             client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                // res.send('done')
+                })
+         
+         
+        //  return ;
+            })
+ 
+ 
+            return 'done'
+        
+    } catch (error) {
+ 
+ 
+     console.log(error)
+     return 'error'
+        
+    }
+ 
+ 
+ }
+
+
+
+
+
+
+
+
+
+
+
 
 exports.findPost = async(req,client) => {
     
