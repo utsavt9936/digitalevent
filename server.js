@@ -67,7 +67,7 @@ global.myid
 
 pool.connect((err,client,done)=>{
 
-   console.log('clt',client)
+  // console.log('clt',client)
 
 
    globalThis.client=client
@@ -641,12 +641,10 @@ app.get('/:id/get_groups',authorizeParams,(req,res)=>{
     }
 })
 
-app.get('/share_link',authorizeParams,(req,res)=>{
+app.get('/:id/share_link',authorizeParams,(req,res)=>{
 
     //res.send("hello")
     var link="https://www.uvwave-invitation.com/visit/"+req.query.type+"/"+req.query.id+"/"+req.query.name;
-
-
 
     res.send({
 link
