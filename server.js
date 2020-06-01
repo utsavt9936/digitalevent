@@ -644,7 +644,7 @@ app.get('/:id/get_groups',authorizeParams,(req,res)=>{
 app.get('/:id/share_link',authorizeParams,(req,res)=>{
 
     //res.send("hello")
-    var link="https://young-cliffs-17105.herokuapp.com/visit/"+req.query.type+"/"+req.query.id+"/"+req.query.name;
+    var link="https://young-cliffs-17105.herokuapp.com/visit?type="+req.query.type+"&id="+req.query.id+"&name="+req.query.name;
 
     res.send({
 link
@@ -652,6 +652,7 @@ link
     
 
 })
+
 app.get('/visit',(req,res)=>{
 
     res.redirect('https://play.google.com/store/apps/details?id=com.whatsapp&hl=en_IN')
