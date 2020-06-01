@@ -524,7 +524,7 @@ io.on('connection',(socket)=>{
      res.send("Working ")
  })
 
- http.listen(port, function () {
+ http.listen(port,'192.168.43.5', function () {
     console.log(' Go to https://localhost:3000/')
   })
 
@@ -644,11 +644,15 @@ app.get('/:id/get_groups',authorizeParams,(req,res)=>{
 app.get('/:id/share_link',authorizeParams,(req,res)=>{
 
     //res.send("hello")
-    var link="https://www.uvwave-invitation.com/visit/"+req.query.type+"/"+req.query.id+"/"+req.query.name;
+    var link="https://young-cliffs-17105.herokuapp.com/visit/"+req.query.type+"/"+req.query.id+"/"+req.query.name;
 
     res.send({
 link
     })
     
 
+})
+app.get('/visit',(req,res)=>{
+
+    res.redirect('https://play.google.com/store/apps/details?id=com.whatsapp&hl=en_IN')
 })
