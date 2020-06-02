@@ -607,6 +607,22 @@ app.get('/:id/get_groups',authorizeParams,(req,res)=>{
       
 
     }
+    else if(req.query.id)
+    {
+        const results=globalThis.client.query('SELECT * FROM groups WHERE id=$1',[req.query.id],(error,result)=>{
+            if(error)
+            {
+                console.log(error)
+                res.send(error)
+            }
+            {
+                res.send(result.rows)
+        console.table(result.rows)
+            }
+        })
+      
+
+    }
     else if(req.query.group_name)
     {
         const results=globalThis.client.query('SELECT * FROM groups WHERE group_name=$1',[req.query.group_name],(error,result)=>{
