@@ -536,6 +536,7 @@ io.on('connection',(socket)=>{
         configt.broadcast={}
         console.log(bds)
             res.send(bds)
+            
      })
      
   })
