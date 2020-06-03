@@ -167,26 +167,27 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
 
 
    app.post('/:id/add_admin',authorizeParams,(req,res)=>{
-    const results= this.globalThis.client.query('update event set admins =array_append(admins,$1) where id=$2;',[req.body.admin_id,req.body.event_id],(err,results)=>{
+    const results= globalThis.client.query('update event set admins =array_append(admins,$1) where id=$2;',[req.body.admin_id,req.body.event_id],(err,results)=>{
         res.send('done')
        })
 
    })
    app.post('/:id/add_speaker',authorizeParams,(req,res)=>{
-    const results= this.globalThis.client.query('update event set speakers_id =array_append(speakers_id,$1) where id=$2;',[req.body.speaker_id,req.body.event_id],(err,results)=>{
+    const results= globalThis.client.query('update event set speakers_id =array_append(speakers_id,$1) where id=$2;',[req.body.speaker_id,req.body.event_id],(err,results)=>{
         res.send('done')
+        
        })
 
    })
    app.post('/:id/add_member',authorizeParams,(req,res)=>{
-    const results= this.globalThis.client.query('update event set members =array_append(members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
+    const results= globalThis.client.query('update event set members =array_append(members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
         res.send('done')
        })
 
    })
 
    app.post('/:id/request_member',authorizeParams,(req,res)=>{
-    const results= this.globalThis.client.query('update event set req_members =array_append(req_members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
+    const results= globalThis.client.query('update event set req_members =array_append(req_members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
         res.send('done')
        })
 
@@ -194,7 +195,7 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
 
 //Like request with JSON
 app.post('/:id/like',authorizeParams,(req,res)=>{
-    const results= this.globalThis.client.query('update standalone set likes =array_append(likes,$1) where id=$2;',[req.body.who,req.body.speaker],(err,results)=>{
+    const results= globalThis.client.query('update standalone set likes =array_append(likes,$1) where id=$2;',[req.body.who,req.body.speaker],(err,results)=>{
         res.send('done')
        })
 
