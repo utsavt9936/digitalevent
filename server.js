@@ -202,6 +202,7 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
         res.send((results.rows[0].req_members))
        })
 
+       
    })
    app.get('/:id/get_user',authorizeParams,(req,res)=>{
     //console.log(globalThis.client)
