@@ -80,9 +80,9 @@ app.post('/:id/create_event',authorizeParams,(req,res)=>{
     // const obj=JSON.parse(req.body)
       console.log(req.body)
      // res.send('done')
-      const results= globalThis.client.query('INSERT INTO event (organiser_type,event_type,category,organiser_name,description,privacy,image,regfee,tags,event_name,date,time) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',[req.body.org_type,req.body.event_type,req.body.category,req.body.name,req.body.description,req.body.privacy,req.body.image,req.body.regfee,req.body.tags,req.body.event_name,req.body.date,req.body.time],(err,results)=>{
+      const results= globalThis.client.query('INSERT INTO event (organiser_type,event_type,category,organiser_name,description,privacy,image,regfee,tags,event_name,date,time) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning id',[req.body.org_type,req.body.event_type,req.body.category,req.body.name,req.body.description,req.body.privacy,req.body.image,req.body.regfee,req.body.tags,req.body.event_name,req.body.date,req.body.time],(err,results)=>{
       // console.log(results)   
-       res.send('done')
+       res.send((results.rows[0]).id)
          })
 
    })
