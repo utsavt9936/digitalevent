@@ -203,6 +203,14 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
        })
 
    })
+   app.get('/:id/get_user',authorizeParams,(req,res)=>{
+    //console.log(globalThis.client)
+ globalThis.client.query('select * from users where id=$1',[req.query.id],(err,results)=>{
+     console.log(results.rows)
+     res.send(results.rows)
+    })
+
+})
 
    
 
