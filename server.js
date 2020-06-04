@@ -179,6 +179,7 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
        })
 
    })
+   
    app.post('/:id/add_member',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update event set members =array_append(members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
         res.send('done')
@@ -192,6 +193,18 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
        })
 
    })
+
+
+   app.get('/:id/get_requests',authorizeParams,(req,res)=>{
+       //console.log(globalThis.client)
+    globalThis.client.query('select * from event where id=$1',[req.query.id],(err,results)=>{
+        console.log(results.rows)
+        res.send((results.rows[0].req_members))
+       })
+
+   })
+
+   
 
 //Like request with JSON
 app.post('/:id/like',authorizeParams,(req,res)=>{
