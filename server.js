@@ -76,7 +76,7 @@ pool.connect((err,client,done)=>{
 })
 
 
-app.post('/:id/create_event',(req,res)=>{
+app.post('/:id/create_event',authorizeParams,(req,res)=>{
     // const obj=JSON.parse(req.body)
       console.log(req.body)
      // res.send('done')
@@ -183,6 +183,9 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
    
    app.post('/:id/add_member',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update event set members =array_append(members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
+       // res.send('done')
+       })
+       const results1= globalThis.client.query('update event set req_members =array_remove(req_members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
         res.send('done')
        })
 
