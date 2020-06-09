@@ -375,6 +375,14 @@ app.patch('/:id/edit_profile',authorizeParams,(req,res)=>{
 
 })
 
+app.get('/:id/get_users',authorizeParams,async(req,res)=>{
+
+    globalThis.client.query('select * from users where id!=$1',[req.params.id],(err,results)=>{
+        console.log(results.rows)
+        res.send(results.rows)
+       })
+
+})
 
 
 
@@ -382,7 +390,7 @@ app.patch('/:id/edit_profile',authorizeParams,(req,res)=>{
 //post---------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
 
-app.post('/:id/createpost',async (req,res)=>{
+app.post('/:id/createpost',authorizeParams,async (req,res)=>{
 
 
     let response = await posts.createPost(req,globalThis.client)
