@@ -220,6 +220,8 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
    
 
 //Like request with JSON
+
+
 app.post('/:id/like',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update standalone set likes =array_append(likes,$1) where id=$2;',[req.body.who,req.body.speaker],(err,results)=>{
         res.send('done')
@@ -552,26 +554,6 @@ const http=require('http').createServer(app)
 const io=require('socket.io')(http)
 
 //console.log(io)
-io.on('connection',(socket)=>{
-
-    // console.log(' client connected ')
-    console.log('new user',socket.id)
-     socket.on('comment',(mess)=>{
- 
-        // console.log(mess)
-         io.emit('comment',mess)
-         console.log(mess)
-     
-     })
-     socket.on('question',(mess)=>{
- 
-        // console.log(mess)
-         io.emit('question',mess)
-         console.log(mess)
-     
-     })
- 
- })
 
  app.get('/',(req,res)=>{
      res.send("Working ")
@@ -748,3 +730,234 @@ app.get('/invite', (req,res)=>{
     res.redirect('https://play.google.com/store/apps/details?id=com.whatsapp&hl=en_IN')
 
 } )
+
+
+
+
+
+
+
+
+
+
+//------------------------------Chat---------------------------------------------------------------------------------
+//------------------------------Chat----------------------------------------------------------------------------------
+
+var storeId={}
+var storeSocket={}
+
+io.on('connection', (socket) => {
+
+    console.log('user connected',socket.id); 
+    // console.log(socket.id);
+    // console.log('====================================');
+    // console.log(io.sockets.connected[socket.id].id);
+    // console.log('====================================');   
+
+    socket.on('register',async(userId)=>{
+        storeId[userId]=socket.id
+        storeSocket[socket.id]=userId
+
+
+    })
+    socket.on('disconnect',function(){
+        storeId[storeSocket[socket.id]]=undefined
+        delete storeSocket[socket.id]
+
+
+    })
+    
+    socket.on('join', async(req) => {
+        
+        let request = JSON.parse(req);
+
+        console.log(request)
+
+        socket.join(520)
+        socket.broadcast.to(520).emit('group_message',JSON.stringify({
+            message:request.userId+" has joined"
+        }))
+    });
+
+    socket.on('group_message', async(req) => {
+        
+        let request = JSON.parse(req);
+
+        console.log(request)
+
+        socket.broadcast.to(520).emit('group_message',req)
+    });
+
+    socket.on('joinRoom' , async(req) => {
+
+        let request = JSON.parse(req);
+        
+        if(checkToken(request._id , request.accessToken)){
+
+            let currentUser = await User.findOne({_id: request._id});
+
+            let currentRoom = await MessageRoom.findOne({_id: request.roomId});
+
+            currentRoom.members.push(currentUser._id);
+            await currentRoom.save();
+
+            currentUser.rooms.push(currentRoom._id);
+            await currentUser.save();
+
+            socket.broadcast.to(currentRoom._id).emit('joinMessage', currentUser._id);
+            
+            socket.join(currentRoom._id);
+        }
+        else
+        {
+            console.log('Invalid Token');
+            return;
+        }
+    });
+
+    socket.on('group' , async(req) => {
+
+        let request = JSON.parse(req);
+
+        if(checkToken(request._id , request.accessToken)) {
+
+            let message = new MessageRoom({
+                content: request.msg,
+                sender: request._id,
+                room: request.roomId,
+                createdAt: new Date()
+            });
+
+            await message.save();
+
+            let currentRoom = await Room.findOne({_id: roomId});
+
+            console.log('Group message to ' + currentRoom.name);
+            
+            socket.broadcast.to(currentRoom._id).emit('group', message);
+        }                  
+        else
+        {
+            console.log('Invalid token');
+        }
+    });
+
+    socket.on('addUser' , async(req) => {
+
+        let request = JSON.parse(req);
+
+        if(checkToken(request._id , request.accessToken)) {
+
+            let currentUser = await User.findOne({name: request.addName});
+            currentUser.rooms.push(request.roomId);
+            await currentUser.save();
+
+            let currentRoom = await Room.findOne({_id: request.roomId});
+            currentRoom.members.push(currentUser._id);
+            await currentRoom.save();
+
+            console.log(currentUser.name + 'has been added to the chat room ' + currentRoom.name);
+
+            io.sockets.connected[currentUser.socketId].join(request.roomId);
+            socket.broadcast.to(currentRoom._id).emit('joinMessage', currentUser._id);
+        }
+    });
+
+    socket.on('updateId',(request)=>{
+        let req = JSON.parse(request);
+        console.log(req,"inside upid")
+        const results= globalThis.client.query('UPDATE socketid SET socketid = $1 where userid=$2;',[req.socketId,req.userId],(err,results)=>{
+            if(err)
+            {
+                console.log(err,"inside upid err")
+                 
+            }
+            
+           })
+
+    })
+   
+
+    socket.on('private' , async(req) => { 
+
+        let request = JSON.parse(req);
+       
+        console.log(request)
+        console.log(storeId[request.to])
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+        if(storeId[request.from])
+        {
+            const results= globalThis.client.query('INSERT INTO messages (mfrom,mto,mcontent,time,seen) values($1,$2,$3,$4,$5) ',[request.from,request.to,request.message,new Date(),1],(error,results)=>{
+                if(error)
+                {console.log(error)}
+
+                  })
+            io.to(storeId[request.to]).emit('private',JSON.stringify({
+            message:request.message,
+            from:request.from
+
+        }))}
+        else
+        {
+            const results= globalThis.client.query('INSERT INTO messages (mfrom,mto,mcontent,time,seen) values($1,$2,$3,$4,$5) ',[request.from,request.to,request.message,new Date(),0],(error,results)=>{
+                if(error)
+                {console.log(error)}
+                
+                  })
+           }
+
+       /* if(checkToken(request._id , request.accessToken)) {
+
+            //console.log('inside private');
+
+            let receiver = await User.findOne({ name: request.to});
+
+            let message = new MessageConvo({
+                content: request.msg,
+                sender: request._id,
+                receiver: receiver._id,
+                conversation: request.convo,
+                createdAt: new Date()
+            });
+
+            await message.save();
+
+            console.log('Private message to ' + receiver.name);
+
+            io.to(`${receiver.socketId}`).emit('private', message);
+        }                  
+        else
+        {
+            console.log('Invalid token');
+        }
+        
+    */
+   
+        });
+
+    socket.on('create' , async(req) => {
+
+        let request = JSON.parse(req);
+        
+        if(checkToken(request._id , request.accessToken)) {
+
+            let room = new Room({
+                createdAt: new Date(),
+                name: request.roomName,
+                members: [request._id],
+                creator: request._id
+            });
+
+            let newRoom = await room.save();
+
+            console.log('Room created ' + roomName);
+            
+            socket.join(newRoom._id);
+        }
+    });
+
+});    
+
