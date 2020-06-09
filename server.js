@@ -969,3 +969,20 @@ io.on('connection', (socket) => {
 
 });    
 
+app.get('/:id/get_messages',authorizeParams,async(req,res)=>{
+
+
+    const results=globalThis.client.query('select * from messages where (mfrom=$1 AND mto=$2) OR (mfrom=$2 AND mto=$1)',[req.params.id,req.query.toid],(error,result)=>{
+        if(error)
+        {
+            console.log(error)
+            res.send(error)
+        }
+        {
+            res.send(result.rows)
+    console.table(result.rows)
+        }
+    })
+
+
+})
