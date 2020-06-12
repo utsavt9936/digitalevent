@@ -375,7 +375,7 @@ app.patch('/:id/edit_profile',authorizeParams,(req,res)=>{
 
 })
 
-app.get('/:id/get_users',authorizeParams,async(req,res)=>{
+app.get('/:id/get_users',async(req,res)=>{
 
     globalThis.client.query('select * from users where id!=$1',[req.params.id],(err,results)=>{
         console.log(results.rows)
@@ -781,10 +781,8 @@ io.on('connection', (socket) => {
 
         console.log(request)
 
-        socket.join(520)
-        socket.broadcast.to(520).emit('group_message',JSON.stringify({
-            message:request.userId+" has joined"
-        }))
+        socket.join(req.group_id)
+        socket.broadcast.to(req.group_id).emit('group_message',req)
     });
 
     socket.on('group_message', async(req) => {
@@ -793,7 +791,12 @@ io.on('connection', (socket) => {
 
         console.log(request)
 
-        socket.broadcast.to(520).emit('group_message',req)
+        socket.broadcast.to(request.group_id).emit('group_message',req)
+        const results= globalThis.client.query('INSERT INTO messages (mfrom,mto,group_id,name,avatar,mcontent,time,seen) values($1,$2,$3,$4,$5) ',[request.from,null,request.group_id,request.name,request.avatar,request.message,new Date(),0],(error,results)=>{
+            if(error)
+            {console.log(error)}
+            
+              })
     });
 
     socket.on('joinRoom' , async(req) => {
@@ -971,8 +974,8 @@ io.on('connection', (socket) => {
 
 app.get('/:id/get_messages',authorizeParams,async(req,res)=>{
 
-
-    const results=globalThis.client.query('select * from messages where (mfrom=$1 AND mto=$2) OR (mfrom=$2 AND mto=$1)',[req.params.id,req.query.toid],(error,result)=>{
+    if(req.query.toid)
+   { const results=globalThis.client.query('select * from messages where (mfrom=$1 AND mto=$2) OR (mfrom=$2 AND mto=$1)',[req.params.id,req.query.toid],(error,result)=>{
         if(error)
         {
             console.log(error)
@@ -982,7 +985,19 @@ app.get('/:id/get_messages',authorizeParams,async(req,res)=>{
             res.send(result.rows)
     console.table(result.rows)
         }
-    })
+    })}
+    else if(req.query.group_id)
+    { const results=globalThis.client.query('select * from messages where group_id=$1',[req.query.group_id],(error,result)=>{
+         if(error)
+         {
+             console.log(error)
+             res.send(error)
+         }
+         {
+             res.send(result.rows)
+     console.table(result.rows)
+         }
+     })}
 
 
 })
