@@ -86,14 +86,14 @@ exports.resetPasswordFinal = async(email , token , newPassword) => {
 
 
 var config1 = {
-    host: 'uvgrid-test.cak8aytcldkp.us-east-2.rds.amazonaws.com',
+    host: 'uvgriddb.cak8aytcldkp.us-east-2.rds.amazonaws.com',
     port: 5432,
     user: 'postgres',
-    password: 'hailhydra',
+    password: 'L3tsPar7y',
     database: "UVGridDB",
-    max: 10, 
-    idleTimeoutMillis: 30000 
-  }
+    max: 10,
+    idleTimeoutMillis: 30000
+}
 const pool= new pg.Pool(config1)
 
 
