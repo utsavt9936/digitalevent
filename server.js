@@ -781,8 +781,8 @@ io.on('connection', (socket) => {
 
         console.log(request)
 
-        socket.join(req.group_id)
-        socket.broadcast.to(req.group_id).emit('group_message',req)
+        socket.join(request.group_id)
+        socket.broadcast.to(request.group_id).emit('group_message',req)
     });
 
     socket.on('group_message', async(req) => {
@@ -802,7 +802,6 @@ io.on('connection', (socket) => {
     socket.on('joinRoom' , async(req) => {
 
         let request = JSON.parse(req);
-        
         if(checkToken(request._id , request.accessToken)){
 
             let currentUser = await User.findOne({_id: request._id});
