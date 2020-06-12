@@ -792,7 +792,7 @@ io.on('connection', (socket) => {
         console.log(request)
 
         socket.broadcast.to(request.group_id).emit('group_message',req)
-        const results= globalThis.client.query('INSERT INTO messages (mfrom,mto,group_id,name,avatar,mcontent,time,seen) values($1,$2,$3,$4,$5) ',[request.from,null,request.group_id,request.name,request.avatar,request.message,new Date(),0],(error,results)=>{
+        const results= globalThis.client.query('INSERT INTO messages (mfrom,mto,group_id,name,avatar,mcontent,time,seen) values($1,$2,$3,$4,$5,$6,$7,$8) ',[request.from,null,request.group_id,request.name,request.avatar,request.message,new Date(),0],(error,results)=>{
             if(error)
             {console.log(error)}
             
