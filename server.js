@@ -336,6 +336,21 @@ console.log(result)
 })
 
 
+app.post('/fpInit',async(req,res)=>{
+    const result=await Password.resetPasswordInit(req.body.email,res)
+
+
+})
+
+app.post('/fpFinal',async(req,res)=>{
+    const result=await Password.resetPasswordFinal(req.body.email,req.body.otp,req.body.password,res)
+
+
+})
+
+
+
+
 app.patch('/:id/edit_profile',authorizeParams,(req,res)=>{
 
     if(req.body.name)

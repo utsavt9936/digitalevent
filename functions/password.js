@@ -8,80 +8,7 @@ const bcrypt = require('bcryptjs');
 const {client} = require('../server')
 const pg=require('pg')
 
-exports.resetPasswordInit = async (email) => {
 
-    const currentUser = await User.findOne({email: email});
-
-    if(!currentUser)
-    {
-        const response = {
-            status: 404,
-            message: 'User Not Found'
-        };
-        return response;
-    }
-    else
-    {
-        //currentUser.otp = otpGenerator.generate(6, {alphabets: false , upperCase: false , specialChars: false});
-        console.log(currentUser);
-        const result = await currentUser.save();
-        
-        const transporter = nodemailer.createTransport(`smtps://${config.email}:${config.password}@smtp.zoho.com`);
-        const mailOptions = {
-
-            from:`"${config.name}" <${config.email}>`,
-            to: currentUser.email,
-            subject: 'Reset Password Request',
-            html: `Hello ${currentUser.name},<br/>
-                    Your Reset password token is <b>${currentUser.otp}</b>.<br/>
-                
-                Thanks,<br/>
-                Customer Support.`
-        };
-
-        const info = await transporter.sendMail(mailOptions);
-
-        console.log(info);
-        const response = {
-            status: 200,
-            message: 'Check mail for instructions'
-        };
-
-        return response;
-   
-    }
-}
-
-exports.resetPasswordFinal = async(email , token , newPassword) => {
-
-    let currentUser = await User.findOne({email: email});
-    
-    if(currentUser.otp === token) 
-    {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(newPassword, salt);
-
-        currentUser.password = hash;
-        currentUser.otp = null;
-        await currentUser.save();
-
-        let response = {
-            status: 200,
-            message: 'Password Changed Successfully'
-        }
-
-        return response;
-    }
-    else
-    {
-        let response = {
-            status: 401,
-            message: 'Invalid Token'
-        }
-
-        return response;
-    }
-}
 
 
 
@@ -101,6 +28,94 @@ const pool= new pg.Pool(config1)
 
 
 pool.connect((err,client,done)=>{
+
+
+
+    exports.resetPasswordInit = async (email,res) => {
+
+        let result= await client.query('select * from users where email=$1',[email])
+        
+    
+        if(!(result.rows[0]))
+        {
+            const response = {
+                status: 404,
+                message: 'User Not Found'
+            };
+            return res.send(JSON.stringify(response));
+        }
+        else
+        {
+            
+           let otp = otpGenerator.generate(6, {alphabets: false , upperCase: false , specialChars: false});
+            client.query('UPDATE users SET otp = $1 WHERE email=$2 ',[otp,email],(err,results)=>{
+                console.log(results)   
+              
+                  })
+            
+            console.log(result.rows[0]);
+            
+            
+            const transporter = nodemailer.createTransport(`smtps://${config.email}:${config.password}@smtp.zoho.com`);
+            const mailOptions = {
+    
+                from:`"${config.name}" <${config.email}>`,
+                to: email,
+                subject: 'Reset Password Request',
+                html: `Hello ${(result.rows[0]).name},<br/>
+                        Your Reset password token is <b>${otp}</b>.<br/>
+                    
+                    Thanks,<br/>
+                    Customer Support.`
+            };
+    
+            const info = await transporter.sendMail(mailOptions);
+    
+            console.log(info);
+            const response = {
+                status: 200,
+                message: 'Check mail for instructions'
+            };
+    
+            return res.send(JSON.stringify(response));
+       
+        }
+    }
+    
+    exports.resetPasswordFinal = async(email , token , newPassword,res) => {
+    
+        let result= await client.query('select * from users where email=$1',[email])
+        
+        if((result.rows[0]).otp === token) 
+        {
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(newPassword, salt);
+    
+            client.query('UPDATE users SET otp = $1, password=$2 WHERE email=$3 ',[null,hash,email],(err,results)=>{
+                console.log(results)   
+              
+                  })
+            
+    
+            let response = {
+                status: 200,
+                message: 'Password Changed Successfully'
+            }
+    
+            return res.send(JSON.stringify(response));
+        }
+        else
+        {
+            let response = {
+                status: 401,
+                message: 'Invalid Token'
+            }
+    
+            return res.send(JSON.stringify(response));
+        }
+    }
+
+
 
 
 
