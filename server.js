@@ -150,7 +150,7 @@ app.post('/:id/addspeaker',(req,res)=>{
      // console.log(req.body)
      // res.send('done')
       //global.myid=4
-      const results= globalThis.client.query('INSERT INTO standalone (speaker,category,topic,description,date,time,speakerid,privacy,image,regfee,tags) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id',[req.body.speaker,null,req.body.topic,req.body.description,req.body.date,req.body.time,req.body.speakerid,null,req.body.image,null,null],(err,results)=>{
+      const results= globalThis.client.query('INSERT INTO standalone (speaker,category,topic,description,date,time,speakerid,privacy,image,regfee,tags,event_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning id',[req.body.speaker,null,req.body.topic,req.body.description,req.body.date,req.body.time,req.body.speakerid,null,req.body.image,null,null,req.body.event_id],(err,results)=>{
        //console.log()   
        const results1= globalThis.client.query('update event set speakers_id =array_append(speakers_id,$1) where id=$2;',[(results.rows[0]).id,req.body.event_id],(err,results)=>{
         // res.send('done')
@@ -256,6 +256,12 @@ else if(req.query.speaker)
 else if(req.query.privacy)
 {
     globalThis.client.query('select * from standalone where privacy=$1',[req.query.privacy],(err,results)=>{
+        res.send(results.rows)
+       })
+}
+else if(req.query.event_id)
+{
+    globalThis.client.query('select * from standalone where event_id=$1',[req.query.event_id],(err,results)=>{
         res.send(results.rows)
        })
 }
