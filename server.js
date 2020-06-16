@@ -150,7 +150,7 @@ app.post('/:id/addspeaker',authorizeParams,(req,res)=>{
      // console.log(req.body)
      // res.send('done')
       //global.myid=4
-      const results= globalThis.client.query('INSERT INTO standalone (speaker,category,topic,description,date,time,speakerid,privacy,image,regfee,tags) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id',[req.body.speaker,req.body.category,req.body.topic,req.body.description,req.body.date,req.body.time,req.body.speakerid,req.body.privacy,req.body.image,req.body.regfee,req.body.tags],(err,results)=>{
+      const results= globalThis.client.query('INSERT INTO standalone (speaker,category,topic,description,date,time,speakerid,privacy,image,regfee,tags) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id',[req.body.speaker,null,req.body.topic,req.body.description,req.body.date,req.body.time,req.body.speakerid,null,req.body.image,null,null],(err,results)=>{
        //console.log()   
        const results1= globalThis.client.query('update event set speakers_id =array_append(speakers_id,$1) where event_name=$2;',[(results.rows[0]).id,req.body.privacy],(err,results)=>{
         // res.send('done')
