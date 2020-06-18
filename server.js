@@ -622,7 +622,7 @@ app.post('/:id/create_group',authorizeParams,(req,res)=>{
     
 
     
-        const result=globalThis.client.query('INSERT INTO groups (group_name,description,icon_url,category,type) values($1,$2,$3,$4,$5)',[req.body.group_name,req.body.description,req.body.icon_url,req.body.category,req.body.type],(error,results)=>{
+        const result=globalThis.client.query('INSERT INTO groups (group_name,description,icon_url,category,type) values($1,$2,$3,$4,$5) returning id',[req.body.group_name,req.body.description,req.body.icon_url,req.body.category,req.body.type],(error,results)=>{
         if(error)
         {
 
@@ -630,7 +630,9 @@ app.post('/:id/create_group',authorizeParams,(req,res)=>{
         else
         {
             console.log(results)
-    res.send(results)
+            res.send({
+                id:(results.rows[0]).id})
+              })
         
         }   
         
