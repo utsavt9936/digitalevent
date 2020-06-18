@@ -167,7 +167,7 @@ app.post('/:id/addspeaker',(req,res)=>{
    })
 
 
-   app.post('/:id/add_admin',authorizeParams,(req,res)=>{
+   app.post('/:id/add_admin_event',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update event set admins =array_append(admins,$1) where id=$2;',[req.body.admin_id,req.body.event_id],(err,results)=>{
         res.send('done')
        })
@@ -725,7 +725,7 @@ app.get('/:id/get_groups',authorizeParams,(req,res)=>{
 
 
 
-app.post('/:id/add_admin',authorizeParams,(req,res)=>{
+app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update groups set admins =array_append(admins,$1) where id=$2;',[req.body.admin_id,req.body.group_id],(err,results)=>{
         res.send('done')
        })
