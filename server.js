@@ -199,7 +199,7 @@ app.post('/:id/addspeaker',(req,res)=>{
    })
 
 
-   app.get('/:id/get_requests',authorizeParams,(req,res)=>{
+   app.get('/:id/get_requests_event',authorizeParams,(req,res)=>{
        //console.log(globalThis.client)
     globalThis.client.query('select * from event where id=$1',[req.query.id],(err,results)=>{
         console.log(results.rows)
@@ -721,6 +721,59 @@ app.get('/:id/get_groups',authorizeParams,(req,res)=>{
 
     }
 })
+
+
+
+
+app.post('/:id/add_admin',authorizeParams,(req,res)=>{
+    const results= globalThis.client.query('update groups set admins =array_append(admins,$1) where id=$2;',[req.body.admin_id,req.body.group_id],(err,results)=>{
+        res.send('done')
+       })
+
+   })
+   
+   app.post('/:id/add_participants',authorizeParams,(req,res)=>{
+    const results= globalThis.client.query('update groups set participants =array_append(participants,$1) where id=$2;',[req.body.participant_id,req.body.group_id],(err,results)=>{
+       // res.send('done')
+       })
+       const results1= globalThis.client.query('update groups set req_participants =array_remove(req_participants,$1) where id=$2;',[req.body.participant_id,req.body.group_id],(err,results)=>{
+        res.send('done')
+       })
+
+   })
+
+   app.post('/:id/request_participant',authorizeParams,(req,res)=>{
+    const results= globalThis.client.query('update groups set req_participants =array_append(req_participants,$1) where id=$2;',[req.body.participant_id,req.body.group_id],(err,results)=>{
+        res.send('done')
+       })
+
+   })
+
+
+   app.get('/:id/get_requests_group',authorizeParams,(req,res)=>{
+       //console.log(globalThis.client)
+    globalThis.client.query('select * from groups where id=$1',[req.query.id],(err,results)=>{
+        console.log(results.rows)
+        res.send((results.rows[0].req_members))
+       })
+
+
+   })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
