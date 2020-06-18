@@ -632,7 +632,7 @@ app.post('/:id/create_group',authorizeParams,(req,res)=>{
             console.log(results)
             res.send({
                 id:(results.rows[0]).id})
-              })
+             
         
         }   
         
