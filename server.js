@@ -645,6 +645,7 @@ app.post('/:id/create_group',authorizeParams,(req,res)=>{
 app.get('/:id/get_groups',authorizeParams,(req,res)=>{
     if(req.query.category)
     {
+        
         const results=globalThis.client.query('SELECT * FROM groups WHERE category=$1',[req.query.category],(error,result)=>{
             if(error)
             {
