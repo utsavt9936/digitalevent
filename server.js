@@ -752,11 +752,11 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
    })
 
 
-   app.get('/:id/get_requests_group',authorizeParams,(req,res)=>{
+   app.get('/:id/get_requests_group',(req,res)=>{
        //console.log(globalThis.client)
     globalThis.client.query('select * from groups where id=$1',[req.query.id],(err,results)=>{
-        console.log(results.rows)
-        res.send((results.rows[0].req_participants))
+        console.log(((results.rows[0]).req_participants))
+        res.send(JSON.stringify((results.rows[0]).req_participants))
        })
 
 
