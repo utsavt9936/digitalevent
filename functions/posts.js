@@ -9,29 +9,59 @@ exports.sharePost = async(req,client) => {
    
   
 
-   try {
-    client.query('INSERT INTO posts (parent_id,parent_author,content, medias,author,createdat) values($1,$2,$3,$4,$5,$6) returning id',[req.body.parent_id,req.body.parent_author,req.body.content,req.body.medias,req.body.authorid,req.body.createdat],(err,results)=>{
-        // return results  
+    try {
+        if(req.body.group_id)
+     {client.query('INSERT INTO posts (parent_id,parent_author,content, media,author,createdat,privacy,group_id) values($7,$8,$1,$2,$3,$4,$5,$6) returning id',[req.body.parent_id,req.body.parent_author,req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id],(err,results)=>{
+         // return results  
+         
+         console.log(results)
+             client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                // res.send('done')
+                })
+         
+         
+        //  return ;
+            })}
+            else  if(req.body.event_id)
+            {client.query('INSERT INTO posts (parent_id,parent_author,content, media,author,createdat,privacy,event_id) values($7,$8,$1,$2,$3,$4,$5,$6) returning id',[req.body.parent_id,req.body.parent_author,req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.event_id],(err,results)=>{
+                // return results  
+                
+                console.log(results)
+                    client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                       // res.send('done')
+                       })
+                
+                
+               //  return ;
+                   })}
+                   else
+                   {client.query('INSERT INTO posts (parent_id,parent_author,content, media,author,createdat,privacy) values($6,$7,$1,$2,$3,$4,$5) returning id',[req.body.parent_id,req.body.parent_author,req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy],(err,results)=>{
+                    // return results  
+                    
+                    console.log(results)
+                        client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                           // res.send('done')
+                           })
+                    
+                    
+                   //  return ;
+                       })}
+
+ 
+ 
+            return 'done'
         
-        console.log(results)
-            client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
-               // res.send('done')
-               })
+    } catch (error) {
+ 
+ 
+     console.log(error)
+     return 'error'
         
-        
-       //  return ;
-           })
+    }
+ 
+ 
+ }
 
-
-           return 'done'
-       
-   } catch (error) {
-
-
-    console.log(error)
-    return 'error'
-       
-   }
 
 
     
@@ -52,7 +82,8 @@ exports.createPost = async(req,client) => {
   
 
     try {
-     client.query('INSERT INTO posts (content, media,author,createdat,privacy) values($1,$2,$3,$4,$5) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy],(err,results)=>{
+        if(req.body.group_id)
+     {client.query('INSERT INTO posts (content, media,author,createdat,privacy,group_id) values($1,$2,$3,$4,$5,$6) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id],(err,results)=>{
          // return results  
          
          console.log(results)
@@ -62,7 +93,32 @@ exports.createPost = async(req,client) => {
          
          
         //  return ;
-            })
+            })}
+            else  if(req.body.event_id)
+            {client.query('INSERT INTO posts (content, media,author,createdat,privacy,event_id) values($1,$2,$3,$4,$5,$6) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.event_id],(err,results)=>{
+                // return results  
+                
+                console.log(results)
+                    client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                       // res.send('done')
+                       })
+                
+                
+               //  return ;
+                   })}
+                   else
+                   {client.query('INSERT INTO posts (content, media,author,createdat,privacy) values($1,$2,$3,$4,$5) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy],(err,results)=>{
+                    // return results  
+                    
+                    console.log(results)
+                        client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                           // res.send('done')
+                           })
+                    
+                    
+                   //  return ;
+                       })}
+
  
  
             return 'done'
@@ -101,10 +157,18 @@ exports.findPost = async(req,client) => {
 
 exports.getPosts = async(req,client) => {
     
-    
-    let results=client.query('select * from posts where author=$1',[req.query.authorid])
+    if(req.query.authorid)
+    {let results=client.query('select * from posts where author=$1',[req.query.authorid])
 
-       return results
+       return results}
+       else if(req.query.groupid)
+       {let results=client.query('select * from posts where group_id=$1',[req.query.groupid])
+   
+          return results}
+          else if(req.query.eventid)
+       {let results=client.query('select * from posts where event_id=$1',[req.query.eventid])
+   
+          return results}
 
 }
 
