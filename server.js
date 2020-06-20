@@ -791,7 +791,7 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
     //console.log(globalThis.client)
  globalThis.client.query('select * from users where id=$1',[req.params.id],(err,results)=>{
      console.log(((results.rows[0]).req_participants))
-     res.send(JSON.stringify({array:(results.rows[0]).req_participants}))
+     res.send(JSON.stringify({array:(results.rows[0]).req_admirers}))
     })
 
 
