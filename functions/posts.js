@@ -181,18 +181,17 @@ exports.commentPost = async(req,client) => {
 }
 
 exports.getComments = async(req,client) => {
-
-   if(req.comment_id)
+    if(req.comment_id)
    {
     let results=client.query('select * from comments where id=$1',[req.query.comment_id])}
 
     return results;
 
    }
-    else
-    { let results=client.query('select * from comments where onpost=$1',[req.query.postid])}
 
-       return results;
+  { { let results=client.query('select * from comments where onpost=$1',[req.query.postid])}
+
+       return results;}
 
 }
 
