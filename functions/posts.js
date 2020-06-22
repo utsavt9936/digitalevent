@@ -11,7 +11,7 @@ exports.sharePost = async(req,client) => {
 
     try {
         if(req.body.group_id)
-     {client.query('INSERT INTO posts (parent_id,parent_author,content, media,author,createdat,privacy,group_id) values($7,$8,$1,$2,$3,$4,$5,$6) returning id',[req.body.parent_id,req.body.parent_author,req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id],(err,results)=>{
+     {client.query('INSERT INTO posts (parent_id,parent_author,content, media,author,createdat,privacy,group_id) values($1,$2,$3,$4,$5,$6,$7,$8) returning id',[req.body.parent_id,req.body.parent_author,req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id],(err,results)=>{
          // return results  
          
          console.log(results)
