@@ -780,7 +780,7 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
    })
 
    app.post('/:id/request_admirer',authorizeParams,(req,res)=>{
-    const results= globalThis.client.query('update users set req_admirers =array_append(req_admirers,$1) where id=$2;',[req.body.admirer_id,req.params.id],(err,results)=>{
+    const results= globalThis.client.query('update users set req_admirers =array_append(req_admirers,$1) where id=$2;',[req.params.id,req.body.admirer_id],(err,results)=>{
         res.send('done')
        })
 
@@ -790,7 +790,7 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
    app.get('/:id/get_requests_admirer',(req,res)=>{
     //console.log(globalThis.client)
  globalThis.client.query('select * from users where id=$1',[req.params.id],(err,results)=>{
-     console.log(((results.rows[0]).req_participants))
+     console.log(((results.rows[0]).req_admirers))
      res.send(JSON.stringify({array:(results.rows[0]).req_admirers}))
     })
 
