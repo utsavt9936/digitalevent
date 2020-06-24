@@ -781,6 +781,8 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
 
    app.post('/:id/request_admirer',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update users set req_admirers =array_append(req_admirers,$1) where id=$2;',[req.params.id,req.body.admirer_id],(err,results)=>{
+        console.log(err)
+        console.log(results)
         res.send('done')
        })
 
