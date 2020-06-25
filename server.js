@@ -208,6 +208,16 @@ app.post('/:id/addspeaker',(req,res)=>{
 
 
    })
+
+   app.get('/:id/get_members_event',authorizeParams,(req,res)=>{
+    //console.log(globalThis.client)
+ globalThis.client.query('select * from event where id=$1',[req.query.id],(err,results)=>{
+     console.log(results.rows)
+     res.send((results.rows[0].members))
+    })
+
+
+})
    app.get('/:id/get_user',authorizeParams,(req,res)=>{
     //console.log(globalThis.client)
  globalThis.client.query('select * from users where id=$1',[req.query.id],(err,results)=>{
