@@ -800,6 +800,17 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
 })
 
 
+app.get('/:id/get_admirers',(req,res)=>{
+    //console.log(globalThis.client)
+ globalThis.client.query('select * from users where id=$1',[req.params.id],(err,results)=>{
+     console.log(((results.rows[0]).admirers))
+     res.send(JSON.stringify({array:(results.rows[0]).admirers}))
+    })
+
+
+})
+
+
 
 
 
