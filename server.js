@@ -768,6 +768,8 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
    app.get('/:id/get_participants',(req,res)=>{
     //console.log(globalThis.client)
  globalThis.client.query('select * from groups where id=$1',[req.query.id],(err,results)=>{
+     console.log(results)
+     console.log(err)
      console.log(((results.rows[0]).participants))
      res.send(JSON.stringify({array:(results.rows[0]).participants}))
     })
