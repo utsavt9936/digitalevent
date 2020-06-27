@@ -186,7 +186,11 @@ app.post('/:id/addspeaker',(req,res)=>{
        // res.send('done')
        })
        const results1= globalThis.client.query('update event set req_members =array_remove(req_members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
-        res.send('done')
+        const results2= globalThis.client.query('update users set events =array_append(events,$1) where id=$2;',[req.body.event_id,req.body.member_id],(err,results)=>{
+            res.send('done')
+
+            
+           })
        })
 
    })
@@ -203,7 +207,7 @@ app.post('/:id/addspeaker',(req,res)=>{
        //console.log(globalThis.client)
     globalThis.client.query('select * from event where id=$1',[req.query.id],(err,results)=>{
         console.log(results.rows)
-        res.send((results.rows[0].req_members))
+        res.send(JSON.stringify({array:(results.rows[0]).req_members}))
        })
 
 
@@ -749,8 +753,11 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update groups set participants =array_append(participants,$1) where id=$2;',[req.body.participant_id,req.body.group_id],(err,results)=>{
        // res.send('done')
        })
+
        const results1= globalThis.client.query('update groups set req_participants =array_remove(req_participants,$1) where id=$2;',[req.body.participant_id,req.body.group_id],(err,results)=>{
+        const results2= globalThis.client.query('update users set groups =array_append(groups,$1) where id=$2;',[req.body.group_id,req.body.participant_id],(err,results)=>{
         res.send('done')
+       })
        })
 
    })
