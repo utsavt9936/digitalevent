@@ -197,6 +197,8 @@ app.post('/:id/addspeaker',(req,res)=>{
 
    app.post('/:id/request_member',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update event set req_members =array_append(req_members,$1) where id=$2;',[req.body.member_id,req.body.event_id],(err,results)=>{
+       
+        console.log(err,results)
         res.send('done')
        })
 
