@@ -548,6 +548,12 @@ app.post('/authenticate' , async(req,res) => {
     }
     
 });
+app.get('/:id/get_feed',(req,res)=>{
+    globalThis.client.query('select * from users where id=$1',[req.params.id],(err,results)=>{
+        res.send(JSON.stringify({array:results.rows[0].feed}))
+       })
+
+})
 
 app.post('/delete',(req,res)=>{
     
