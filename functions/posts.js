@@ -18,6 +18,31 @@ exports.sharePost = async(req,client) => {
          console.log(err)
              client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
                 // res.send('done')
+
+
+                client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results1)=>{
+                    // res.send('done')
+
+                    let tobj=JSON.stringify({
+                     type:"shared_post_in_group",
+                     authorid:req.body.authorid,
+                     content_id:(results.rows[0]).id,
+                     group_id:req.body.group_id,
+                     time:new Date()
+
+                     
+                 })
+                 client.query('select * from groups where id=$1',[req.body.group_id],(err,results2)=>{
+                     client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].members)],(err,results3)=>{
+                         // res.send('done')
+                         console.log(err,results3)
+                         })
+                        })
+
+
+                    })
+
+
                 })
          
          
@@ -29,6 +54,29 @@ exports.sharePost = async(req,client) => {
                 
                 console.log(results)
                     client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+
+
+                        client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results1)=>{
+                            // res.send('done')
+ 
+                            let tobj=JSON.stringify({
+                             type:"shared_post_in_event",
+                             authorid:req.body.authorid,
+                             content_id:(results.rows[0]).id,
+                             event_id:req.body.event_id,
+                             time:new Date()
+ 
+                             
+                         })
+                         client.query('select * from event where id=$1',[req.body.event_id],(err,results2)=>{
+                             client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].participants)],(err,results3)=>{
+                                 // res.send('done')
+                                 console.log(err,results3)
+                                 })
+                                })
+ 
+ 
+                            })
                        // res.send('done')
                        })
                 
@@ -40,8 +88,25 @@ exports.sharePost = async(req,client) => {
                     // return results  
                     
                     console.log(results)
-                        client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                        client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results1)=>{
                            // res.send('done')
+
+                           let tobj=JSON.stringify({
+                            type:"shared_post",
+                            authorid:req.body.authorid,
+                            content_id:(results.rows[0]).id,
+                            time:new Date()
+
+                            
+                        })
+                        client.query('select * from users where id=$1',[req.body.authorid],(err,results2)=>{
+                            client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].admirers)],(err,results3)=>{
+                                // res.send('done')
+                                console.log(err,results3)
+                                })
+                               })
+
+
                            })
                     
                     
@@ -204,6 +269,20 @@ exports.likePost = async(req,client) => {
                 client.query('UPDATE users SET likes =array_append(likes,$1) where id=$2;',[req.body.postid,req.body.authorid],(err,results)=>{
                    // res.send('done')
                    })
+                   let tobj=JSON.stringify({
+                    type:"liked_post",
+                    authorid:req.body.authorid,
+                    content_id:req.body.postid,
+                    time:new Date()
+
+                    
+                })
+                client.query('select * from users where id=$1',[req.body.authorid],(err,results2)=>{
+                    client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].admirers)],(err,results3)=>{
+                        // res.send('done')
+                        console.log(err,results3)
+                        })
+                       })
             
             
            //  return ;
@@ -234,12 +313,30 @@ exports.commentPost = async(req,client) => {
             // return results  
             
             console.log(results)
-                client.query('update posts set commentss =array_append(comments,$1) where id=$2;',[(results.rows[0]).id,req.body.onpost],(err,result)=>{
+                client.query('update posts set comments =array_append(comments,$1) where id=$2;',[(results.rows[0]).id,req.body.onpost],(err,result5)=>{
 
 
-                    client.query('UPDATE users SET comments =array_append(comments,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,result)=>{
+                    client.query('UPDATE users SET comments =array_append(comments,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,result4)=>{
                         // res.send('done')
                         })
+
+
+
+                        let tobj=JSON.stringify({
+                            type:"commented_post",
+                            authorid:req.body.authorid,
+                            content_id:(results.rows[0]).id,
+                            time:new Date()
+        
+                            
+                        })
+                        client.query('select * from users where id=$1',[req.body.authorid],(err,results2)=>{
+                            client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].admirers)],(err,results3)=>{
+                                // res.send('done')
+                                console.log(err,results3)
+                                })
+                               })
+                        
 
                    // res.send('done')
                    })
