@@ -114,7 +114,26 @@ exports.createPost = async(req,client) => {
                     console.log(results)
                         client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
                            // res.send('done')
+                           let tobj=JSON.stringify({
+                            type:"new_post",
+                            authorid:req.body.authorid,
+                            content_id:(results.rows[0]).id,
+                            time:new Date()
+
+                            
+                        })
+                        client.query('select * from users where id=$1',[req.body.authorid],(err,results1)=>{
+                            client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[545,(results1.rows[0].admirers)],(err,results)=>{
+                                // res.send('done')
+                                console.log(err,results)
+                                })
+                               })
+                        
+                            
+                            
                            })
+                        
+                           
                     
                     
                    //  return ;
