@@ -228,8 +228,22 @@ app.post('/:id/addspeaker',(req,res)=>{
     //console.log(globalThis.client)
  globalThis.client.query('select * from users where id=$1',[req.query.id],(err,results)=>{
      console.log(results.rows)
-     
-     res.send(results.rows)
+
+     let tobj=JSON.stringify({
+        type:"new_post",
+        authorid:577,
+        content_id:233,
+        time:new Date()
+
+        
+    })
+
+
+    globalThis.client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results.rows[0].admirers)],(err,results)=>{
+        // res.send('done')
+        console.log(err,results)
+        })
+     res.send('results.rows')
     })
 
 })
