@@ -117,7 +117,7 @@ exports.createPost = async(req,client) => {
                            let tobj=JSON.stringify({
                             type:"new_post",
                             authorid:req.body.authorid,
-                            content_id:(results1.rows[0]).id,
+                            content_id:(results.rows[0]).id,
                             time:new Date()
 
                             
