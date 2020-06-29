@@ -227,6 +227,7 @@ app.post('/:id/addspeaker',(req,res)=>{
    app.get('/:id/get_user',(req,res)=>{
     //console.log(globalThis.client)
  globalThis.client.query('select * from users where id=$1',[req.query.id],(err,results)=>{
+     return res.send(results.rows)
      console.log(results.rows)
 
      let tobj=JSON.stringify({
@@ -243,7 +244,7 @@ app.post('/:id/addspeaker',(req,res)=>{
         // res.send('done')
         console.log(err,results)
         })
-     res.send('results.rows')
+     
     })
 
 })
