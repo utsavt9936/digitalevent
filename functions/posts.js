@@ -190,7 +190,7 @@ exports.createPost = async(req,client) => {
                 // return results  
                 
                 console.log(results)
-                client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results)=>{
+                client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results4)=>{
 
 
                     client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results1)=>{
