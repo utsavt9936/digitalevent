@@ -32,7 +32,7 @@ exports.sharePost = async(req,client) => {
                      
                  })
                  client.query('select * from groups where id=$1',[req.body.group_id],(err,results2)=>{
-                     client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].members)],(err,results3)=>{
+                     client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].participants)],(err,results3)=>{
                          // res.send('done')
                          console.log(err,results3)
                          })
@@ -68,7 +68,7 @@ exports.sharePost = async(req,client) => {
                              
                          })
                          client.query('select * from event where id=$1',[req.body.event_id],(err,results2)=>{
-                             client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].participants)],(err,results3)=>{
+                             client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].members)],(err,results3)=>{
                                  // res.send('done')
                                  console.log(err,results3)
                                  })
@@ -169,7 +169,7 @@ exports.createPost = async(req,client) => {
                  
              })
              client.query('select * from groups where id=$1',[req.body.group_id],(err,results2)=>{
-                 client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].members)],(err,results3)=>{
+                 client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].participants)],(err,results3)=>{
                      // res.send('done')
                      console.log(err,results3)
                      })
@@ -196,7 +196,7 @@ exports.createPost = async(req,client) => {
                         // res.send('done')
 
                         let tobj=JSON.stringify({
-                         type:"shared_post_in_event",
+                         type:"new_post_in_event",
                          authorid:req.body.authorid,
                          content_id:(results.rows[0]).id,
                          event_id:req.body.event_id,
@@ -205,7 +205,7 @@ exports.createPost = async(req,client) => {
                          
                      })
                      client.query('select * from event where id=$1',[req.body.event_id],(err,results2)=>{
-                         client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].participants)],(err,results3)=>{
+                         client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].members)],(err,results3)=>{
                              // res.send('done')
                              console.log(err,results3)
                              })
