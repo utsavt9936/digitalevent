@@ -833,6 +833,19 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
        })
 
    })
+   app.post('/:id/remove_admirer',authorizeParams,(req,res)=>{
+    const results= globalThis.client.query('update users set admirers =array_remove(admirers,$1) where id=$2;',[req.body.admirer_id,req.params.id],(err,results)=>{
+       // res.send('done')
+       console.log(err,results)
+       })
+
+       const results2= globalThis.client.query('update users set followee =array_remove(followee,$1) where id=$2;',[req.params.id,req.body.admirer_id],(err,results)=>{
+        // res.send('done')
+        console.log(err,results)
+        })
+      res.send('done')
+
+   })
 
    app.post('/:id/request_admirer',authorizeParams,(req,res)=>{
     const results= globalThis.client.query('update users set req_admirers =array_append(req_admirers,$1) where id=$2;',[req.params.id,req.body.admirer_id],(err,results)=>{
