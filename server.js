@@ -453,6 +453,17 @@ app.post('/:id/createpost',authorizeParams,async (req,res)=>{
 
 })
 
+
+app.post('/:id/deletepost',authorizeParams,async (req,res)=>{
+
+
+    let response = await posts.deletePost(req,globalThis.client)
+
+   
+    res.send(response)
+
+})
+
 app.post('/:id/sharepost',authorizeParams,async (req,res)=>{
 
 
@@ -820,13 +831,15 @@ app.post('/:id/add_admin_group',authorizeParams,(req,res)=>{
 
 
 
-   app.post('/:id/add_admirer',authorizeParams,(req,res)=>{
+   app.post('/:id/add_admirer',(req,res)=>{
     const results= globalThis.client.query('update users set admirers =array_append(admirers,$1) where id=$2;',[req.body.admirer_id,req.params.id],(err,results)=>{
        // res.send('done')
+       console.log(err,results)
        })
 
        const results2= globalThis.client.query('update users set followee =array_append(followee,$1) where id=$2;',[req.params.id,req.body.admirer_id],(err,results)=>{
         // res.send('done')
+        console.log(err,results)
         })
        const results1= globalThis.client.query('update users set req_admirers =array_remove(req_admirers,$1) where id=$2;',[req.body.admirer_id,req.params.id],(err,results)=>{
         res.send('done')

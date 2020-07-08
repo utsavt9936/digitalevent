@@ -272,6 +272,121 @@ exports.createPost = async(req,client) => {
 
 
 
+ exports.deletePost = async(req,client) => {
+
+   
+  
+
+    try {
+        if(req.body.group_id)
+     {client.query('DELETE FROM posts WHERE id=$1',[req.body.postid],(err,results)=>{
+         // return results  
+         
+         console.log(results)
+  
+            // res.send('done')
+
+
+            client.query('update users set posts =array_remove(posts,$1) where id=$2;',[req.body.postid,req.params.id],(err,results1)=>{
+                // res.send('done')
+
+              
+           /*  client.query('select * from groups where id=$1',[req.body.group_id],(err,results2)=>{
+                 client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].participants)],(err,results3)=>{
+                     // res.send('done')
+                     console.log(err,results3)
+                     })
+                    })*/
+
+
+                })
+
+
+         
+         
+         
+        //  return ;
+            })}
+            else  if(req.body.event_id)
+            {client.query('DELETE FROM posts WHERE id=$1',[req.body.postid],(err,results)=>{
+                // return results  
+                
+                console.log(results)
+         
+                   // res.send('done')
+       
+       
+                   client.query('update users set posts =array_remove(posts,$1) where id=$2;',[req.body.postid,req.params.id],(err,results1)=>{
+                        // res.send('done')
+
+                     
+                    /*client.query('select * from event where id=$1',[req.body.event_id],(err,results2)=>{
+                         client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].members)],(err,results3)=>{
+                             // res.send('done')
+                             console.log(err,results3)
+                             })
+                            })*/
+
+
+                        })
+                   // res.send('done')
+                  
+                
+                
+               //  return ;
+                   })}
+                   else
+                   {client.query('DELETE FROM posts WHERE id=$1',[req.body.postid],(err,results)=>{
+                    // return results  
+                    
+                    console.log(results)
+             
+                       // res.send('done')
+           
+           
+                       client.query('update users set posts =array_remove(posts,$1) where id=$2;',[req.body.postid,req.params.id],(err,results1)=>{
+                           // res.send('done')
+                           
+                        /*client.query('select * from users where id=$1',[req.body.authorid],(err,results2)=>{
+                            client.query('update users set feed =array_append(feed,$1) where id = ANY($2::int[]);',[tobj,(results2.rows[0].admirers)],(err,results3)=>{
+                                // res.send('done')
+                                console.log(err,results3)
+                                })
+                               })*/
+                        
+                            
+                            
+                           })
+                        
+                           
+                    
+                    
+                   //  return ;
+                       })}
+
+ 
+ 
+            return 'done'
+        
+    } catch (error) {
+ 
+ 
+     console.log(error)
+     return 'error'
+        
+    }
+ 
+ 
+ }
+
+
+
+
+
+
+
+
+
 
 
 
