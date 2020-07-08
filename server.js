@@ -454,6 +454,16 @@ app.post('/:id/createpost',authorizeParams,async (req,res)=>{
 })
 
 
+app.post('/:id/editpost',authorizeParams,async (req,res)=>{
+
+
+    let response = await posts.editPost(req,globalThis.client)
+
+   
+    res.send(response)
+
+})
+
 app.post('/:id/deletepost',authorizeParams,async (req,res)=>{
 
 

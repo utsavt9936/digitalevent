@@ -271,6 +271,91 @@ exports.createPost = async(req,client) => {
 
 
 
+ exports.editPost = async(req,client) => {
+
+   
+  
+
+    try {
+        if(req.body.group_id)
+     {client.query('UPDATE posts SET (content, media,author,createdat,privacy,group_id) values($1,$2,$3,$4,$5,$6) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id],(err,results)=>{
+         // return results  
+         
+         console.log(results)
+  
+            // res.send('done')
+
+
+         
+         
+         
+        //  return ;
+            })}
+            else  if(req.body.event_id)
+            {client.query('UPDATE posts SET (content, media,author,createdat,privacy,event_id) values($1,$2,$3,$4,$5,$6) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.event_id],(err,results)=>{
+                // return results  
+                
+                console.log(results)
+               
+
+
+                    
+                   // res.send('done')
+                  
+                
+                
+               //  return ;
+                   })}
+                   else
+                   {client.query('UPDATE posts SET (content, media,author,createdat,privacy) values($1,$2,$3,$4,$5) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy],(err,results)=>{
+                    // return results  
+                    
+                        
+                           
+                    
+                    
+                   //  return ;
+                       })}
+
+ 
+ 
+            return 'done'
+        
+    } catch (error) {
+ 
+ 
+     console.log(error)
+     return 'error'
+        
+    }
+ 
+ 
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  exports.deletePost = async(req,client) => {
 
