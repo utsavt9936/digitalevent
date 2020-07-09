@@ -278,7 +278,7 @@ exports.createPost = async(req,client) => {
 
     try {
         if(req.body.group_id)
-     {client.query('UPDATE posts SET (content, media,author,createdat,privacy,group_id) values($1,$2,$3,$4,$5,$6) where id=$7 ',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id,req.body.postid],(err,results)=>{
+     {client.query('UPDATE posts SET content=$1, media=$2,author=$3,createdat=$4,privacy=$5,group_id=$6 where id=$7 ',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id,req.body.postid],(err,results)=>{
          // return results  
          
          console.log(results,err)
@@ -292,7 +292,7 @@ exports.createPost = async(req,client) => {
         //  return ;
             })}
             else  if(req.body.event_id)
-            {client.query('UPDATE posts SET (content, media,author,createdat,privacy,event_id) values($1,$2,$3,$4,$5,$6) where id=$7 ',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.event_id,req.body.postid],(err,results)=>{
+            {client.query('UPDATE posts SET content=$1, media=$2,author=$3,createdat=$4,privacy=$5,event_id=$6 where id=$7 ',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.event_id,req.body.postid],(err,results)=>{
                 // return results  
                 
                 console.log(results,err)
@@ -307,7 +307,7 @@ exports.createPost = async(req,client) => {
                //  return ;
                    })}
                    else
-                   {client.query('UPDATE posts SET (content, media,author,createdat,privacy) values($1,$2,$3,$4,$5) where id=$6',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.postid],(err,results)=>{
+                   {client.query('UPDATE posts SET content=$1, media=$2,author=$3,createdat=$4,privacy=$5 where id=$6',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.postid],(err,results)=>{
                     // return results  
                     
                     console.log(results,err)
