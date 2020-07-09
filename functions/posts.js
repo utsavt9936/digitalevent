@@ -281,7 +281,7 @@ exports.createPost = async(req,client) => {
      {client.query('UPDATE posts SET (content, media,author,createdat,privacy,group_id) values($1,$2,$3,$4,$5,$6) where id=$7 ',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.group_id,req.body.postid],(err,results)=>{
          // return results  
          
-         console.log(results)
+         console.log(results,err)
   
             // res.send('done')
 
@@ -295,7 +295,7 @@ exports.createPost = async(req,client) => {
             {client.query('UPDATE posts SET (content, media,author,createdat,privacy,event_id) values($1,$2,$3,$4,$5,$6) where id=$7 ',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.event_id,req.body.postid],(err,results)=>{
                 // return results  
                 
-                console.log(results)
+                console.log(results,err)
                
 
 
@@ -310,7 +310,7 @@ exports.createPost = async(req,client) => {
                    {client.query('UPDATE posts SET (content, media,author,createdat,privacy) values($1,$2,$3,$4,$5) where id=$6',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.postid],(err,results)=>{
                     // return results  
                     
-                        
+                    console.log(results,err)
                            
                     
                     
