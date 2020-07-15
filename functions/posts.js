@@ -480,8 +480,8 @@ exports.createPost = async(req,client) => {
 exports.findPost = async(req,client) => {
     
 
-   let results= client.query('select * from posts where id=$1',[req.query.postid])
-
+   let results= await client.query('select * from posts where id=$1',[req.query.postid])
+    console.log(results,"chk")
        return results.rows;
 
     
