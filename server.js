@@ -93,7 +93,7 @@ app.post('/:id/create_event',authorizeParams,(req,res)=>{
    app.get('/:id/listEvent',authorizeParams,(req,res)=>{
     //ask query ?category=Tech
     if(req.query.event_type)
-    {
+    {  
         globalThis.client.query('select * from event where event_type=$1',[req.query.event_type],(err,results)=>{
             res.send(results.rows)
            })
