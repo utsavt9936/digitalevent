@@ -96,7 +96,7 @@ app.post('/:id/create_event',authorizeParams,(req,res)=>{
     {  
         globalThis.client.query('select * from event where event_type=$1',[req.query.event_type],(err,results)=>{
             res.send(results.rows)
-           })
+           })         
     }
     //ask query ?speaker=Utsav
 else if(req.query.id)
