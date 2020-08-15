@@ -37,7 +37,7 @@ const authorizeParams = require('./functions/checkToken');
 
 
 var config = {
-    host: 'uvgriddb.cak8aytcldkp.us-east-2.rds.amazonaws.com',
+    host: 'uvgrid-deploy.cak8aytcldkp.us-east-2.rds.amazonaws.com',
     port: 5432,
     user: 'postgres',
     password: 'L3tsPar7y',
@@ -67,7 +67,7 @@ global.myid
 
 pool.connect((err,client,done)=>{
 
-  // console.log('clt',client)
+  console.log('clt',client)
 
 
    globalThis.client=client
@@ -90,7 +90,7 @@ app.post('/:id/create_event',authorizeParams,(req,res)=>{
 
 
 
-   app.get('/:id/listEvent',authorizeParams,(req,res)=>{
+   app.get('/:id/listEvent',(req,res)=>{
     //ask query ?category=Tech
     if(req.query.event_type)
     {  
