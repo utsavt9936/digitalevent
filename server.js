@@ -14,6 +14,15 @@ const fs=require('fs')
 const configt=require('./config/config.json')
 //const http=require('http')
 
+
+
+
+
+
+
+
+
+
 var hlsconfig={hls:{}}
 
 const lvs=require('./liveStream')
@@ -37,7 +46,7 @@ const authorizeParams = require('./functions/checkToken');
 
 
 var config = {
-    host: 'uvgrid-deploy.cak8aytcldkp.us-east-2.rds.amazonaws.com',
+    host: 'uvgrid-db1.cak8aytcldkp.us-east-2.rds.amazonaws.com',
     port: 5432,
     user: 'postgres',
     password: 'L3tsPar7y',
