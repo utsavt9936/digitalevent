@@ -1220,3 +1220,120 @@ app.get('/:id/get_messages',authorizeParams,async(req,res)=>{
 
 
 })
+
+
+
+
+//--------------------------------------------------------------
+//----------PROGRAM---------------------------------------------
+
+
+app.post('/:id/create_program',authorizeParams,(req,res)=>{
+    // const obj=JSON.parse(req.body)
+      console.log(req.body)
+     // res.send('done')
+     if(req.body.privacy=="Private")
+     {
+        const results= globalThis.client.query('INSERT INTO program (event,title,description,privacy,image,,date,time) values($1,$2,$3,$4,$5,$6,$7) returning id',[req.body.event_id,req.body.title,req.body.description,req.body.privacy,req.body.image,req.body.date,req.body.time],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+
+     }
+     else
+     {
+        globalThis.client.query('select * from event where id=$1',[req.body.event_id],(err,results)=>{
+            if(!results)
+            return res.send("No event of this id present")
+            let tp=(results.rows[0]).members
+            const results2= globalThis.client.query('INSERT INTO program (event,title,description,privacy,image,,date,time,members) values($1,$2,$3,$4,$5,$6,$7,$8) returning id',[req.body.event_id,req.body.title,req.body.description,req.body.privacy,req.body.image,req.body.date,req.body.time,tp],(err,results1)=>{
+                // console.log(results)   
+                 res.send({
+                     id:(results1.rows[0]).id,
+                    status:"created"})
+                   })
+
+
+           }) 
+     }
+      
+
+   })
+
+
+
+   app.get('/:id/listEvent',(req,res)=>{
+    //ask query ?category=Tech
+   if(req.query.privacy)
+   {
+    globalThis.client.query('select * from program where event_id=$1 and privacy=$2',[req.query.event_id,req.query.privacy],(err,results)=>{
+        res.send(results.rows)
+       })     
+   }
+   else if(req.query.title)
+   {
+    globalThis.client.query('select * from program where event_id=$1 and title=$2',[req.query.event_id,req.query.title],(err,results)=>{
+        res.send(results.rows)
+       })    
+
+   }
+   else
+   {
+    globalThis.client.query('select * from program where event_id=$1 ',[req.query.event_id],(err,results)=>{
+        res.send(results.rows)
+       })  
+
+   }
+
+
+})
+
+
+
+app.post('/:id/add_member_program',authorizeParams,(req,res)=>{
+    try {
+        const results= globalThis.client.query('update program set members =array_append(members,$1) where id=$2;',[req.body.member_id,req.body.program_id],(err,results)=>{
+            // res.send('done')
+            })
+            const results1= globalThis.client.query('update program set req_members =array_remove(req_members,$1) where id=$2;',[req.body.member_id,req.body.program_id],(err,results)=>{
+             
+            })
+            res.send("Member Added")
+    } catch (error) {
+        res.send(error)
+    }
+      
+
+   })
+
+   app.post('/:id/request_member_program',authorizeParams,(req,res)=>{
+    const results= globalThis.client.query('update program set req_members =array_append(req_members,$1) where id=$2;',[req.body.member_id,req.body.program_id],(err,results)=>{
+       
+        console.log(err,results)
+        res.send('done')
+       })
+
+   })
+
+
+   app.get('/:id/get_requests_program',authorizeParams,(req,res)=>{
+       //console.log(globalThis.client)
+    globalThis.client.query('select * from program where id=$1',[req.query.id],(err,results)=>{
+        console.log(results.rows)
+        res.send(JSON.stringify({array:(results.rows[0]).req_members}))
+       })
+
+
+   })
+
+   app.get('/:id/get_members_program',(req,res)=>{
+    //console.log(globalThis.client)
+ globalThis.client.query('select * from program where id=$1',[req.query.id],(err,results)=>{
+     console.log(results.rows)
+     res.send((results.rows[0].members))
+    })
+
+
+})
