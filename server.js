@@ -1264,7 +1264,7 @@ app.post('/:id/create_program',authorizeParams,(req,res)=>{
 
 
 
-   app.get('/:id/listEvent',(req,res)=>{
+   app.get('/:id/listProgram',(req,res)=>{
     //ask query ?category=Tech
    if(req.query.privacy)
    {
