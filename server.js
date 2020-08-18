@@ -76,7 +76,7 @@ global.myid
 
 pool.connect((err,client,done)=>{
 
-  console.log('clt',client)
+  //console.log('clt',client)
 
 
    globalThis.client=client
@@ -1228,13 +1228,13 @@ app.get('/:id/get_messages',authorizeParams,async(req,res)=>{
 //----------PROGRAM---------------------------------------------
 
 
-app.post('/:id/create_program',authorizeParams,(req,res)=>{
+app.post('/:id/create_program',(req,res)=>{
     // const obj=JSON.parse(req.body)
       console.log(req.body)
      // res.send('done')
      if(req.body.privacy=="Private")
      {
-        const results= globalThis.client.query('INSERT INTO program (event,title,description,privacy,image,,date,time) values($1,$2,$3,$4,$5,$6,$7) returning id',[req.body.event_id,req.body.title,req.body.description,req.body.privacy,req.body.image,req.body.date,req.body.time],(err,results)=>{
+        const results= globalThis.client.query('INSERT INTO program (event,title,description,privacy,image,date,time) values($1,$2,$3,$4,$5,$6,$7) returning id',[req.body.event_id,req.body.title,req.body.description,req.body.privacy,req.body.image,req.body.date,req.body.time],(err,results)=>{
             // console.log(results)   
              res.send({
                  id:(results.rows[0]).id,
@@ -1248,8 +1248,9 @@ app.post('/:id/create_program',authorizeParams,(req,res)=>{
             if(!results)
             return res.send("No event of this id present")
             let tp=(results.rows[0]).members
-            const results2= globalThis.client.query('INSERT INTO program (event,title,description,privacy,image,,date,time,members) values($1,$2,$3,$4,$5,$6,$7,$8) returning id',[req.body.event_id,req.body.title,req.body.description,req.body.privacy,req.body.image,req.body.date,req.body.time,tp],(err,results1)=>{
-                // console.log(results)   
+            console.log(tp)
+            const results2= globalThis.client.query('INSERT INTO program (event,title,description,privacy,image,date,time,members) values($1,$2,$3,$4,$5,$6,$7,$8) returning id',[req.body.event_id,req.body.title,req.body.description,req.body.privacy,req.body.image,req.body.date,req.body.time,tp],(err,results1)=>{
+               // console.log(results1,err)   
                  res.send({
                      id:(results1.rows[0]).id,
                     status:"created"})
@@ -1318,6 +1319,8 @@ app.post('/:id/add_member_program',authorizeParams,(req,res)=>{
    })
 
 
+
+   
    app.get('/:id/get_requests_program',authorizeParams,(req,res)=>{
        //console.log(globalThis.client)
     globalThis.client.query('select * from program where id=$1',[req.query.id],(err,results)=>{
