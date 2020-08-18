@@ -99,6 +99,8 @@ app.post('/:id/create_event',authorizeParams,(req,res)=>{
 
 
 
+
+
    app.get('/:id/listEvent',(req,res)=>{
     //ask query ?category=Tech
     if(req.query.event_type)
@@ -1340,3 +1342,10 @@ app.post('/:id/add_member_program',authorizeParams,(req,res)=>{
 
 
 })
+
+
+
+
+
+
+
