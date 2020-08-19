@@ -1271,20 +1271,20 @@ app.post('/:id/create_program',(req,res)=>{
     //ask query ?category=Tech
    if(req.query.privacy)
    {
-    globalThis.client.query('select * from program where event_id=$1 and privacy=$2',[req.query.event_id,req.query.privacy],(err,results)=>{
+    globalThis.client.query('select * from program where event=$1 and privacy=$2',[req.query.event_id,req.query.privacy],(err,results)=>{
         res.send(results.rows)
        })     
    }
    else if(req.query.title)
    {
-    globalThis.client.query('select * from program where event_id=$1 and title=$2',[req.query.event_id,req.query.title],(err,results)=>{
+    globalThis.client.query('select * from program where event=$1 and title=$2',[req.query.event_id,req.query.title],(err,results)=>{
         res.send(results.rows)
        })    
 
    }
    else
    {
-    globalThis.client.query('select * from program where event_id=$1 ',[req.query.event_id],(err,results)=>{
+    globalThis.client.query('select * from program where event=$1 ',[req.query.event_id],(err,results)=>{
         res.send(results.rows)
        })  
 
