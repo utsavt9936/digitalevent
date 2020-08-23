@@ -1343,6 +1343,72 @@ app.post('/:id/add_member_program',authorizeParams,(req,res)=>{
 
 })
 
+//----------------------------------------------------------------------------
+//----------------------------------STORY-------------------------------------
+
+
+app.post('/:id/create_story',(req,res)=>{
+    // const obj=JSON.parse(req.body)
+      console.log(req.body)
+     // res.send('done')
+     var unx =new Date()
+       var tt=Math.floor(unx.getTime()/1000);
+     if(req.body.event_id)
+     {
+        const results= globalThis.client.query('INSERT INTO story (event_id,text,image,time,author_id) values($1,$2,$3,$4,$5) returning id',[req.body.event_id,req.body.text,req.body.image,tt,req.body.author_id],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+
+     }
+     else if(req.body.group_id)
+     {
+        const results= globalThis.client.query('INSERT INTO story (group_id,text,image,time,author_id) values($1,$2,$3,$4,$5) returning id',[req.body.group_id,req.body.text,req.body.image,tt,req.body.author_id],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+     }
+     else
+   res.send("Found Nothing ")
+      
+
+   })
+
+
+
+   app.get('/:id/listStory',(req,res)=>{
+       var unx =new Date()
+       var tt=Math.floor(unx.getTime()/1000);
+       tt=tt-24*60*60
+
+       globalThis.client.query('delete from story where time<$1 ',[tt],(err,results)=>{
+        res.send(results.rows)
+       }) 
+
+
+    //ask query ?category=Tech
+   if(req.query.event_id)
+   {
+    globalThis.client.query('select * from story where event_id=$1 ',[req.query.event_id],(err,results)=>{
+        res.send(results.rows)
+       })     
+   }
+   else if(req.query.group_id)
+   {
+    globalThis.client.query('select * from story where group_id=$1 ',[req.query.group_id],(err,results)=>{
+        res.send(results.rows)
+       })    
+
+   }
+   else
+   res.send("Found Nothing ")
+
+
+})
 
 
 
