@@ -219,6 +219,37 @@ exports.createPost = async(req,client) => {
                 
                //  return ;
                    })}
+                   else  if(req.body.program_id)
+            {client.query('INSERT INTO posts (content, media,author,createdat,privacy,program_id) values($1,$2,$3,$4,$5,$6) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy,req.body.program_id],(err,results)=>{
+                // return results  
+                
+                console.log(results)
+               
+
+
+                    client.query('update users set posts =array_append(posts,$1) where id=$2;',[(results.rows[0]).id,req.body.authorid],(err,results1)=>{
+                        // res.send('done')
+
+                        let tobj=JSON.stringify({
+                         type:"new_post_in_event",
+                         authorid:req.body.authorid,
+                         content_id:(results.rows[0]).id,
+                         event_id:req.body.event_id,
+                         time:new Date()
+
+                         
+                     })
+                     
+
+
+                        })
+                   // res.send('done')
+                  
+                
+                
+               //  return ;
+                   })}
+
                    else
                    {client.query('INSERT INTO posts (content, media,author,createdat,privacy) values($1,$2,$3,$4,$5) returning id',[req.body.content,req.body.media,req.body.authorid,req.body.createdat,req.body.privacy],(err,results)=>{
                     // return results  
