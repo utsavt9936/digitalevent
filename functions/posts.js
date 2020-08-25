@@ -532,6 +532,10 @@ exports.getPosts = async(req,client) => {
        {let results=client.query('select * from posts where event_id=$1',[req.query.eventid])
    
           return results}
+          else if(req.query.programid)
+       {let results=client.query('select * from posts where program_id=$1',[req.query.programid])
+   
+          return results}
 
 }
 

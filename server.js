@@ -1386,7 +1386,7 @@ app.post('/:id/create_story',(req,res)=>{
        tt=tt-24*60*60
 
        globalThis.client.query('delete from story where time<$1 ',[tt],(err,results)=>{
-        res.send(results.rows)
+        console.log(results.rows)
        }) 
 
 
