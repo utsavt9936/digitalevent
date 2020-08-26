@@ -1411,7 +1411,62 @@ app.post('/:id/create_story',(req,res)=>{
 })
 
 
+//-------------------------------------------------------------------------
+//-------------------------------report------------------------------------
 
+
+
+
+
+app.post('/:id/create_report',(req,res)=>{
+    // const obj=JSON.parse(req.body)
+      console.log(req.body)
+     // res.send('done')
+     var unx =new Date()
+       var tt=Math.floor(unx.getTime()/1000);
+     if(req.body.event_id)
+     {
+        const results= globalThis.client.query('INSERT INTO report (event_id,description,author_id,time) values($1,$2,$3,$4) returning id',[req.body.event_id,req.body.description,req.body.author_id,req.body.time],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+
+     }
+     else if(req.body.group_id)
+     {
+        const results= globalThis.client.query('INSERT INTO report (group_id,description,author_id,time) values($1,$2,$3,$4) returning id',[req.body.group_id,req.body.description,req.body.author_id,req.body.time],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+     }
+     else if(req.body.user_id)
+     {
+        const results= globalThis.client.query('INSERT INTO report (user_id,description,author_id,time) values($1,$2,$3,$4) returning id',[req.body.user_id,req.body.description,req.body.author_id,req.body.time],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+     }
+     else
+   res.send("Found Nothing ")
+      
+
+   })
+
+
+
+   app.get('/:id/listreports',(req,res)=>{
+    globalThis.client.query('select * from report ',(err,results)=>{
+        console.log(results.rows)
+        res.send(results)
+       }) 
+   })
+      
 
 
 
