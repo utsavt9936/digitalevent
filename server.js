@@ -1569,8 +1569,19 @@ app.post('/:id/create_block',(req,res)=>{
 
           res.send("send proper body")
    })
-   app.get('/:id/unblock_request',(req,res)=>{
+
+   app.post('/:id/unblock_request',(req,res)=>{
     const results2= globalThis.client.query('update block set requests =array_append(requestss,$1) (where blocker=$2) and (where blocked=$3);',[req.body.request,req.body.blocker,req.body.blocked],(err,results)=>{
+        res.send('done')
+
+        
+       })
+   })
+
+
+   app.post('/:id/delete_block',(req,res)=>{
+
+    const results2= globalThis.client.query('delete from block (where blocker=$2) and (where blocked=$3);',[req.body.blocker,req.body.blocked],(err,results)=>{
         res.send('done')
 
         
