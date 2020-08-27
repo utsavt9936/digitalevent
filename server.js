@@ -18,11 +18,6 @@ const configt=require('./config/config.json')
 
 
 
-
-
-
-
-
 var hlsconfig={hls:{}}
 
 const lvs=require('./liveStream')
@@ -1465,6 +1460,121 @@ app.post('/:id/create_report',(req,res)=>{
         console.log(results.rows)
         res.send(results)
        }) 
+   })
+      
+
+
+   app.post('/:id/create_story',(req,res)=>{
+    // const obj=JSON.parse(req.body)
+      console.log(req.body)
+     // res.send('done')
+     var unx =new Date()
+       var tt=Math.floor(unx.getTime()/1000);
+     if(req.body.event_id)
+     {
+        const results= globalThis.client.query('INSERT INTO story (event_id,text,image,time,author_id) values($1,$2,$3,$4,$5) returning id',[req.body.event_id,req.body.text,req.body.image,tt,req.body.author_id],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+
+     }
+     else if(req.body.group_id)
+     {
+        const results= globalThis.client.query('INSERT INTO story (group_id,text,image,time,author_id) values($1,$2,$3,$4,$5) returning id',[req.body.group_id,req.body.text,req.body.image,tt,req.body.author_id],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+     }
+     else
+   res.send("Found Nothing ")
+      
+
+   })
+
+
+
+   app.get('/:id/listStory',(req,res)=>{
+       var unx =new Date()
+       var tt=Math.floor(unx.getTime()/1000);
+       tt=tt-24*60*60
+
+       globalThis.client.query('delete from story where time<$1 ',[tt],(err,results)=>{
+        console.log(results.rows)
+       }) 
+
+
+    //ask query ?category=Tech
+   if(req.query.event_id)
+   {
+    globalThis.client.query('select * from story where event_id=$1 ',[req.query.event_id],(err,results)=>{
+        res.send(results.rows)
+       })     
+   }
+   else if(req.query.group_id)
+   {
+    globalThis.client.query('select * from story where group_id=$1 ',[req.query.group_id],(err,results)=>{
+        res.send(results.rows)
+       })    
+
+   }
+   else
+   res.send("Found Nothing ")
+
+
+})
+
+
+//-------------------------------------------------------------------------
+//-------------------------------report------------------------------------
+
+
+
+
+
+app.post('/:id/create_block',(req,res)=>{
+    // const obj=JSON.parse(req.body)
+      console.log(req.body)
+     // res.send('done')
+     
+     
+        const results= globalThis.client.query('INSERT INTO block (blocker,blocked,time) values($1,$2,$3) returning id',[req.body.blocker,req.body.blocked,req.body.time],(err,results)=>{
+            // console.log(results)   
+             res.send({
+                 id:(results.rows[0]).id,
+                status:"created"})
+               })
+
+     
+      
+
+   })
+
+
+
+   app.get('/:id/get_blocks',(req,res)=>{
+    if(req.body.blocker)
+    {globalThis.client.query('select * from block where blocker=$1 ',[req.body.blocker],(err,results)=>{
+        console.log(results.rows)
+        res.send(results)
+       }) }
+       else if(req.body.blocked)
+       {globalThis.client.query('select * from block where blocked=$1 ',[req.body.blocked],(err,results)=>{
+           console.log(results.rows)
+           res.send(results)
+          }) }
+
+          res.send("send proper body")
+   })
+   app.get('/:id/unblock_request',(req,res)=>{
+    const results2= globalThis.client.query('update block set requests =array_append(requestss,$1) (where blocker=$2) and (where blocked=$3);',[req.body.request,req.body.blocker,req.body.blocked],(err,results)=>{
+        res.send('done')
+
+        
+       })
    })
       
 
